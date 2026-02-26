@@ -1,0 +1,47 @@
+﻿@page "/login"
+@page "/"
+@inject NavigationManager Nav
+
+<h3>Logga in</h3>
+
+<div style="display:flex; flex-direction:column; width:250px; gap:10px;">
+
+    <input @bind="Email" placeholder="Email" />
+
+    <input @bind="Password" type="password" placeholder="Lösenord" />
+
+    <button @onclick="LoginUser">Logga in</button>
+
+    <button @onclick="GoToRegister" style="margin-top:10px;">
+        Registrera konto
+    </button>
+
+</div>
+
+@if (!string.IsNullOrEmpty(Message))
+{
+    <p>@Message</p>
+}
+
+@code {
+    private string Email { get; set; } = "";
+    private string Password { get; set; } = "";
+    private string Message { get; set; } = "";
+
+    private void LoginUser()
+    {
+        if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
+        {
+            Message = "Fyll i både email och lösenord.";
+            return;
+        }
+
+        Message = $"Inloggad som {Email}";
+        Nav.NavigateTo("/categories");
+    }
+
+    private void GoToRegister()
+    {
+        Nav.NavigateTo("/register");
+    }
+}

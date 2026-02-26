@@ -1,0 +1,52 @@
+﻿@page "/register"
+@inject NavigationManager Nav
+
+<h3>Skapa konto</h3>
+
+<div style="display:flex; flex-direction:column; width:250px; gap:10px;">
+
+    <input @bind="RegEmail" placeholder="Email" />
+
+    <input @bind="RegPassword" type="password" placeholder="Lösenord" />
+
+    <input @bind="ConfirmPassword" type="password" placeholder="Bekräfta lösenord" />
+
+    <button @onclick="RegisterUser">Registrera</button>
+
+</div>
+
+@if (!string.IsNullOrEmpty(Message))
+{
+    <p>@Message</p>
+}
+
+@code {
+    private string RegEmail { get; set; } = "";
+    private string RegPassword { get; set; } = "";
+    private string ConfirmPassword { get; set; } = "";
+    private string Message { get; set; } = "";
+
+    private void RegisterUser()
+    {
+        // Dummy-validering
+        if (string.IsNullOrWhiteSpace(RegEmail) ||
+            string.IsNullOrWhiteSpace(RegPassword) ||
+            string.IsNullOrWhiteSpace(ConfirmPassword))
+        {
+            Message = "Alla fält måste fyllas i.";
+            return;
+        }
+
+        if (RegPassword != ConfirmPassword)
+        {
+            Message = "Lösenorden matchar inte.";
+            return;
+        }
+
+        // Dummy-register – låtsas att det lyckas
+        Message = $"Konto skapat för: {RegEmail}";
+
+        // Navigera vidare till login
+        Nav.NavigateTo("/login");
+    }
+}
