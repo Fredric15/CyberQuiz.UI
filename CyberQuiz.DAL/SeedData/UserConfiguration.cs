@@ -22,7 +22,8 @@ namespace CyberQuiz.DAL.SeedData
                 Email = "user@example.com",
                 NormalizedEmail = "USER@EXAMPLE.COM",
                 EmailConfirmed = true,
-                SecurityStamp = "STATIC_STAMP_FOR_SEED_USER"
+                SecurityStamp = "STATIC_STAMP_FOR_SEED_USER",
+                ConcurrencyStamp = "STATIC_CONCURRENCY_STAMP"
             };
 
             // Färdighashat lösenord "Password1234!" (du kan ändra det till vad du vill)
