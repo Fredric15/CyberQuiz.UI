@@ -9,7 +9,7 @@ namespace CyberQuiz.DAL.Models
         public int Id { get; set; }
         public string Text { get; set; }
         public List<OptionModel> Options { get; set; } = new();
-        public int QuizId { get; set; }
+        public int QuizModelId { get; set; } // Foreign key till QuizModel
         public QuizModel? Quiz { get; set; }
     }
 }

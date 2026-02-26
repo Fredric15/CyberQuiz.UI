@@ -13,7 +13,7 @@ namespace CyberQuiz.DAL.Models
         public ApplicationUser? ApplicationUser { get; set; }
 
         // Koppling till en specifik underkategori
-        public int SubCategoryId { get; set; } // Koppla till SubCategoryModel
+        public int SubCategoryModelId { get; set; } // Koppla till SubCategoryModel
         public SubCategoryModel? SubCategory { get; set; }
 
         // Är den avklarad?

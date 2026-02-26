@@ -13,12 +13,12 @@ namespace CyberQuiz.DAL.Models
         public ApplicationUser? ApplicationUser { get; set; }
 
         //Koppling till ett specifikt quiz
-        public int QuizId { get; set; }
+        public int QuizModelId { get; set; } // Foreign key till QuizModel
         public QuizModel? Quiz { get; set; }
 
         //Resultat av quizet
         public int Score { get; set; } //Antal rätta svar
         public int TotalQuestions { get; set; } //Totalt antal frågor i quizet
-        public DateTime CompletedAt { get; set; }
+        public DateTime CompletedAt { get; set; } = DateTime.UtcNow; //När quizet avklarades
     }
 }

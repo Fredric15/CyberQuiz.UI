@@ -9,7 +9,7 @@ namespace CyberQuiz.DAL.Models
         public int Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public int SubCategoryId { get; set; }
+        public int SubCategoryModelId { get; set; }
         public List<QuestionModel> Questions { get; set; } = new();
     }
 }
