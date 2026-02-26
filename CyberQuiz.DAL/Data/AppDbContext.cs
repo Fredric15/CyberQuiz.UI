@@ -21,5 +21,12 @@ namespace CyberQuiz.DAL.Data
         public DbSet<OptionModel> Options { get; set; }
         public DbSet<UserProgressModel> UserProgress { get; set; }
         public DbSet<UserScoreModel> UserScores { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            //Aktivera Seeding
+            base.OnModelCreating(builder);
+            builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+        }
     }
 }
