@@ -7,10 +7,10 @@ namespace CyberQuiz.DAL.Repositories.Interfaces
 {
     public interface IUserScoreRepository
     {
-        // Hämtar alla poäng för en specifik användare
+        // Hämtar alla UserScore-objekt för en specifik användare
         Task<IEnumerable<UserScoreModel>> GetUserScoreByUserIdAsync(string userId);
         
-        // Lägger till en ny poäng för en användare
+        // Lägger till ett nytt UserScore-objekt för en användare
         Task AddScoreAsync(UserScoreModel userScore);
     }
 }
