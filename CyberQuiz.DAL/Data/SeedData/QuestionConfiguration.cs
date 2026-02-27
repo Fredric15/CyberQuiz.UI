@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CyberQuiz.DAL.SeedData
+namespace CyberQuiz.DAL.Data.SeedData
 {
     public class QuestionConfiguration : IEntityTypeConfiguration<QuestionModel>
     {
