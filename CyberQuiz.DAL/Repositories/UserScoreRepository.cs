@@ -17,7 +17,7 @@ namespace CyberQuiz.DAL.Repositories
         }
         public async Task AddScoreAsync(UserScoreModel userScore)
         {
-            //Skapar ett nytt UserScore-objekt och lägger till den i databasen
+            // Lägger till ett nytt UserScore-objekt kopplat till en användare och ett quiz och sparar det i databasen
             await _context.UserScores.AddAsync(userScore);
             await _context.SaveChangesAsync();
         }
@@ -25,6 +25,7 @@ namespace CyberQuiz.DAL.Repositories
         public async Task<IEnumerable<UserScoreModel>> GetUserScoreByUserIdAsync(string userId)
         {
             // Hämtar alla UserScore-objekt som matchar det angivna userId och returnerar dem som en lista
+            // Detta används för att visa användarens poäng i olika quiz
             return await _context.UserScores
                 .Where(us => us.ApplicationUserId == userId)
                 .ToListAsync();
