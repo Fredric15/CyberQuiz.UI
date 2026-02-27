@@ -8,11 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\Components\Layout\MainLayout.razor.css" />
-    <None Include="wwwroot\Components\Layout\NavMenu.razor.css" />
-    <None Include="wwwroot\Components\Layout\ReconnectModal.razor.css" />
-    <None Include="wwwroot\Components\Layout\ReconnectModal.razor.js" />
+    <Compile Remove="wwwroot\Components\**" />
+    <Content Remove="wwwroot\Components\**" />
+    <EmbeddedResource Remove="wwwroot\Components\**" />
+    <None Remove="wwwroot\Components\**" />
   </ItemGroup>
+
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.3" />
@@ -24,10 +26,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CyberQuiz.Shared\CyberQuiz.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\Components\Pages\NewFolder\" />
   </ItemGroup>
 
 </Project>

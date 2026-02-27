@@ -1,21 +1,14 @@
-﻿@page "/login"
+﻿@namespace CyberQuiz.UI.Components.Pages
 @page "/"
 @inject NavigationManager Nav
 
 <h3>Logga in</h3>
 
 <div style="display:flex; flex-direction:column; width:250px; gap:10px;">
-
     <input @bind="Email" placeholder="Email" />
-
     <input @bind="Password" type="password" placeholder="Lösenord" />
-
     <button @onclick="LoginUser">Logga in</button>
-
-    <button @onclick="GoToRegister" style="margin-top:10px;">
-        Registrera konto
-    </button>
-
+    <button @onclick="GoToRegister">Registrera konto</button>
 </div>
 
 @if (!string.IsNullOrEmpty(Message))
@@ -30,14 +23,14 @@
 
     private void LoginUser()
     {
-        if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
+        if (Email == "test@test.com" && Password == "123")
         {
-            Message = "Fyll i både email och lösenord.";
-            return;
+            Nav.NavigateTo("/home");
         }
-
-        Message = $"Inloggad som {Email}";
-        Nav.NavigateTo("/categories");
+        else
+        {
+            Message = "Fel email eller lösenord.";
+        }
     }
 
     private void GoToRegister()

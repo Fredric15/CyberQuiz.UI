@@ -1,18 +1,15 @@
-﻿@page "/register"
+﻿@namespace CyberQuiz.UI.Components.Pages
+@page "/register"
 @inject NavigationManager Nav
 
 <h3>Skapa konto</h3>
 
 <div style="display:flex; flex-direction:column; width:250px; gap:10px;">
-
-    <input @bind="RegEmail" placeholder="Email" />
-
-    <input @bind="RegPassword" type="password" placeholder="Lösenord" />
-
+    <input @bind="Email" placeholder="Email" />
+    <input @bind="Password" type="password" placeholder="Lösenord" />
     <input @bind="ConfirmPassword" type="password" placeholder="Bekräfta lösenord" />
 
     <button @onclick="RegisterUser">Registrera</button>
-
 </div>
 
 @if (!string.IsNullOrEmpty(Message))
@@ -21,32 +18,33 @@
 }
 
 @code {
-    private string RegEmail { get; set; } = "";
-    private string RegPassword { get; set; } = "";
+    private string Email { get; set; } = "";
+    private string Password { get; set; } = "";
     private string ConfirmPassword { get; set; } = "";
     private string Message { get; set; } = "";
 
     private void RegisterUser()
     {
         // Dummy-validering
-        if (string.IsNullOrWhiteSpace(RegEmail) ||
-            string.IsNullOrWhiteSpace(RegPassword) ||
+        if (string.IsNullOrWhiteSpace(Email) ||
+            string.IsNullOrWhiteSpace(Password) ||
             string.IsNullOrWhiteSpace(ConfirmPassword))
         {
             Message = "Alla fält måste fyllas i.";
             return;
         }
 
-        if (RegPassword != ConfirmPassword)
+        if (Password != ConfirmPassword)
         {
             Message = "Lösenorden matchar inte.";
             return;
         }
 
-        // Dummy-register – låtsas att det lyckas
-        Message = $"Konto skapat för: {RegEmail}";
+        // Dummy-register
+        Message = $"Konto skapat för {Email}";
 
-        // Navigera vidare till login
+        // Navigera till login
         Nav.NavigateTo("/login");
+
     }
 }
