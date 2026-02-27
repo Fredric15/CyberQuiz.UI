@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace CyberQuiz.DAL.SeedData
+namespace CyberQuiz.DAL.Data.SeedData
 {
     public class QuizConfiguration : IEntityTypeConfiguration<QuizModel>
     {
