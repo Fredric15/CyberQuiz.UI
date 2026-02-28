@@ -1,5 +1,6 @@
-﻿@namespace CyberQuiz.UI.Components.Pages
-@page "/register"
+﻿@page "/register"
+@namespace CyberQuiz.UI.Pages
+
 @inject NavigationManager Nav
 
 <h3>Skapa konto</h3>
@@ -44,7 +45,7 @@
         Message = $"Konto skapat för {Email}";
 
         // Navigera till login
-        Nav.NavigateTo("/login");
+        Nav.NavigateTo("/");
 
     }
 }
