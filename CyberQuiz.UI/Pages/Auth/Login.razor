@@ -1,0 +1,51 @@
+﻿@page "/"
+
+<div class="auth-wrapper">
+    <div class="auth-panel">
+        <h2 class="auth-title">Välkommen tillbaka</h2>
+        <p class="auth-subtitle">Logga in för att fortsätta</p>
+
+        @if (!string.IsNullOrEmpty(ErrorMessage))
+        {
+            <div class="auth-error">@ErrorMessage</div>
+        }
+
+        <div class="auth-field">
+            <label>Email</label>
+            <input @bind="Email" type="email" />
+        </div>
+
+        <div class="auth-field">
+            <label>Lösenord</label>
+            <input @bind="Password" type="password" />
+        </div>
+
+        <button class="auth-button" @onclick="HandleLogin">Logga in</button>
+
+        <p class="auth-switch">
+            Har du inget konto?
+            <a href="/register">Registrera dig</a>
+        </p>
+    </div>
+</div>
+
+@code {
+    private string Email = "";
+    private string Password = "";
+    private string? ErrorMessage;
+
+    private async Task HandleLogin()
+    {
+        await Task.Delay(500); // dummy
+
+        if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
+        {
+            ErrorMessage = "Fyll i alla fält.";
+            return;
+        }
+
+        Navigation.NavigateTo("/categories");
+    }
+
+    [Inject] NavigationManager Navigation { get; set; } = default!;
+}

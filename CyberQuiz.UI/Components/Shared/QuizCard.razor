@@ -1,0 +1,27 @@
+﻿<div class="quiz-card" @onclick="HandleClick" style="cursor:@(OnClick.HasDelegate ? "pointer" : "default")">
+    <div class="quiz-card-header">
+        <h3>@Title</h3>
+    </div>
+
+    <div class="quiz-card-body">
+        <p>@Description</p>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Tag))
+    {
+        <div class="quiz-card-tag">@Tag</div>
+    }
+</div>
+
+@code {
+    [Parameter] public string Title { get; set; } = "";
+    [Parameter] public string Description { get; set; } = "";
+    [Parameter] public string? Tag { get; set; }
+    [Parameter] public EventCallback OnClick { get; set; }
+
+    private async Task HandleClick()
+    {
+        if (OnClick.HasDelegate)
+            await OnClick.InvokeAsync();
+    }
+}
