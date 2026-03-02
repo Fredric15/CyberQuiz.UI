@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CyberQuiz.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260226212314_InitalSeedCreate")]
-    partial class InitalSeedCreate
+    [Migration("20260302163457_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -88,24 +88,6 @@ namespace CyberQuiz.DAL.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "C4A682B7-878D-49C9-9DE5-A0AF381897D0",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "STATIC_CONCURRENCY_STAMP",
-                            Email = "user@example.com",
-                            EmailConfirmed = true,
-                            LockoutEnabled = false,
-                            NormalizedEmail = "USER@EXAMPLE.COM",
-                            NormalizedUserName = "USER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEOvE+26L3R0fA3tG8s9D6nS+hX/GjD3U/g1rM3I/6aKzFjF9jR2L+Q==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "STATIC_STAMP_FOR_SEED_USER",
-                            TwoFactorEnabled = false,
-                            UserName = "user"
-                        });
                 });
 
             modelBuilder.Entity("CyberQuiz.DAL.Models.CategoryModel", b =>
@@ -177,1892 +159,1892 @@ namespace CyberQuiz.DAL.Migrations
                         new
                         {
                             Id = 1,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 1,
-                            Text = "Option 1"
+                            Text = "To monitor and control incoming and outgoing network traffic based on predetermined security rules.(R)"
                         },
                         new
                         {
                             Id = 2,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 1,
-                            Text = "Rätt"
+                            Text = "To encrypt all data stored on a computer's hard drive."
                         },
                         new
                         {
                             Id = 3,
                             IsCorrect = false,
                             QuestionModelId = 1,
-                            Text = "Option 3"
+                            Text = "To permanently delete malware and viruses from an infected system."
                         },
                         new
                         {
                             Id = 4,
                             IsCorrect = true,
                             QuestionModelId = 2,
-                            Text = "Option 1"
+                            Text = "Packet-filtering firewall.(R)"
                         },
                         new
                         {
                             Id = 5,
                             IsCorrect = false,
                             QuestionModelId = 2,
-                            Text = "Option 2"
+                            Text = "Web application firewall (WAF)."
                         },
                         new
                         {
                             Id = 6,
                             IsCorrect = false,
                             QuestionModelId = 2,
-                            Text = "Option 3"
+                            Text = "Next-generation firewall (NGFW)."
                         },
                         new
                         {
                             Id = 7,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 3,
-                            Text = "Option 1"
+                            Text = "Stateful inspection.(R)"
                         },
                         new
                         {
                             Id = 8,
                             IsCorrect = false,
                             QuestionModelId = 3,
-                            Text = "Option 2"
+                            Text = "Phishing simulation."
                         },
                         new
                         {
                             Id = 9,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 3,
-                            Text = "Rätt"
+                            Text = "Password hashing."
                         },
                         new
                         {
                             Id = 10,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 4,
-                            Text = "Option 1"
+                            Text = "Application-level gateway (Proxy firewall) / WAF.(R)"
                         },
                         new
                         {
                             Id = 11,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 4,
-                            Text = "Rätt"
+                            Text = "Hardware-based packet firewall."
                         },
                         new
                         {
                             Id = 12,
                             IsCorrect = false,
                             QuestionModelId = 4,
-                            Text = "Option 3"
+                            Text = "Stateless network firewall."
                         },
                         new
                         {
                             Id = 13,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 5,
-                            Text = "Option 1"
+                            Text = "Stateful firewalls track the operating state of connections, while stateless firewalls examine each packet individually.(R)"
                         },
                         new
                         {
                             Id = 14,
                             IsCorrect = false,
                             QuestionModelId = 5,
-                            Text = "Option 2"
+                            Text = "Stateful firewalls are only used in home networks, while stateless firewalls are for enterprise environments."
                         },
                         new
                         {
                             Id = 15,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 5,
-                            Text = "Rätt"
+                            Text = "Stateful firewalls encrypt data in transit, while stateless firewalls only encrypt data at rest."
                         },
                         new
                         {
                             Id = 16,
                             IsCorrect = true,
                             QuestionModelId = 6,
-                            Text = "Rätt"
+                            Text = "A broadband router with a built-in hardware NAT/firewall.(R)"
                         },
                         new
                         {
                             Id = 17,
                             IsCorrect = false,
                             QuestionModelId = 6,
-                            Text = "Option 2"
+                            Text = "An enterprise-grade Web Application Firewall (WAF)."
                         },
                         new
                         {
                             Id = 18,
                             IsCorrect = false,
                             QuestionModelId = 6,
-                            Text = "Option 3"
+                            Text = "A dedicated Deep Packet Inspection (DPI) server."
                         },
                         new
                         {
                             Id = 19,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 7,
-                            Text = "Option 1"
+                            Text = "To expose public-facing services to an untrusted network while keeping the internal local network secure.(R)"
                         },
                         new
                         {
                             Id = 20,
                             IsCorrect = false,
                             QuestionModelId = 7,
-                            Text = "Option 2"
+                            Text = "To completely block all incoming and outgoing internet traffic during maintenance."
                         },
                         new
                         {
                             Id = 21,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 7,
-                            Text = "Rätt"
+                            Text = "To create a high-speed bypass lane that skips all security checks for VIP users."
                         },
                         new
                         {
                             Id = 22,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 8,
-                            Text = "Option 1"
+                            Text = "Deep Packet Inspection (DPI) firewall.(R)"
                         },
                         new
                         {
                             Id = 23,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 8,
-                            Text = "Rätt"
+                            Text = "Stateless packet-filtering firewall."
                         },
                         new
                         {
                             Id = 24,
                             IsCorrect = false,
                             QuestionModelId = 8,
-                            Text = "Option 3"
+                            Text = "Circuit-level gateway."
                         },
                         new
                         {
                             Id = 25,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 9,
-                            Text = "Option 1"
+                            Text = "It acts as a barrier that blocks unauthorized connection attempts from external sources.(R)"
                         },
                         new
                         {
                             Id = 26,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 9,
-                            Text = "Rätt"
+                            Text = "It automatically resets user passwords if they are suspected to be compromised."
                         },
                         new
                         {
                             Id = 27,
                             IsCorrect = false,
                             QuestionModelId = 9,
-                            Text = "Option 3"
+                            Text = "It physically disconnects the network cable when a threat is detected."
                         },
                         new
                         {
                             Id = 28,
                             IsCorrect = true,
                             QuestionModelId = 10,
-                            Text = "Rätt"
+                            Text = "Next-Generation Firewall (NGFW).(R)"
                         },
                         new
                         {
                             Id = 29,
                             IsCorrect = false,
                             QuestionModelId = 10,
-                            Text = "Option 2"
+                            Text = "Software firewall bundled with a standard operating system."
                         },
                         new
                         {
                             Id = 30,
                             IsCorrect = false,
                             QuestionModelId = 10,
-                            Text = "Option 3"
+                            Text = "A basic layer 3 packet-filtering router."
                         },
                         new
                         {
                             Id = 31,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 11,
-                            Text = "Option 1"
+                            Text = "Virtual Private Network.(R)"
                         },
                         new
                         {
                             Id = 32,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 11,
-                            Text = "Rätt"
+                            Text = "Visual Processing Node."
                         },
                         new
                         {
                             Id = 33,
                             IsCorrect = false,
                             QuestionModelId = 11,
-                            Text = "Option 3"
+                            Text = "Verified Public Network."
                         },
                         new
                         {
                             Id = 34,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 12,
-                            Text = "Option 1"
+                            Text = "To create a secure, encrypted connection over a less secure network like the internet.(R)"
                         },
                         new
                         {
                             Id = 35,
                             IsCorrect = false,
                             QuestionModelId = 12,
-                            Text = "Option 2"
+                            Text = "To permanently delete viruses and malware from a local machine."
                         },
                         new
                         {
                             Id = 36,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 12,
-                            Text = "Rätt"
+                            Text = "To boost the physical hardware speed of an internet connection."
                         },
                         new
                         {
                             Id = 37,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 13,
-                            Text = "Option 1"
+                            Text = "Remote access VPN.(R)"
                         },
                         new
                         {
                             Id = 38,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 13,
-                            Text = "Rätt"
+                            Text = "Local Area Network (LAN) VPN."
                         },
                         new
                         {
                             Id = 39,
                             IsCorrect = false,
                             QuestionModelId = 13,
-                            Text = "Option 3"
+                            Text = "Hardware-only VPN."
                         },
                         new
                         {
                             Id = 40,
                             IsCorrect = true,
                             QuestionModelId = 14,
-                            Text = "Rätt"
+                            Text = "Site-to-site connects entire networks together, while remote access connects individual devices to a network.(R)"
                         },
                         new
                         {
                             Id = 41,
                             IsCorrect = false,
                             QuestionModelId = 14,
-                            Text = "Option 2"
+                            Text = "Site-to-site is only for home use, while remote access is exclusively for large enterprises."
                         },
                         new
                         {
                             Id = 42,
                             IsCorrect = false,
                             QuestionModelId = 14,
-                            Text = "Option 3"
+                            Text = "Site-to-site does not use encryption, while remote access requires heavy encryption."
                         },
                         new
                         {
                             Id = 43,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 15,
-                            Text = "Option 1"
+                            Text = "IPsec (Internet Protocol Security) or OpenVPN.(R)"
                         },
                         new
                         {
                             Id = 44,
                             IsCorrect = false,
                             QuestionModelId = 15,
-                            Text = "Option 2"
+                            Text = "HTTP (Hypertext Transfer Protocol)."
                         },
                         new
                         {
                             Id = 45,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 15,
-                            Text = "Rätt"
+                            Text = "FTP (File Transfer Protocol)."
                         },
                         new
                         {
                             Id = 46,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 16,
-                            Text = "Option 1"
+                            Text = "To scramble data so that unauthorized parties cannot read it if intercepted.(R)"
                         },
                         new
                         {
                             Id = 47,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 16,
-                            Text = "Rätt"
+                            Text = "To compress files so they download faster over the network."
                         },
                         new
                         {
                             Id = 48,
                             IsCorrect = false,
                             QuestionModelId = 16,
-                            Text = "Option 3"
+                            Text = "To prevent the user's device from overheating during heavy network usage."
                         },
                         new
                         {
                             Id = 49,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 17,
-                            Text = "Option 1"
+                            Text = "Site-to-site VPN.(R)"
                         },
                         new
                         {
                             Id = 50,
                             IsCorrect = false,
                             QuestionModelId = 17,
-                            Text = "Option 2"
+                            Text = "Personal consumer VPN."
                         },
                         new
                         {
                             Id = 51,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 17,
-                            Text = "Rätt"
+                            Text = "Proxy-only VPN."
                         },
                         new
                         {
                             Id = 52,
                             IsCorrect = true,
                             QuestionModelId = 18,
-                            Text = "Rätt"
+                            Text = "It masks the user's real IP address and encrypts their internet traffic.(R)"
                         },
                         new
                         {
                             Id = 53,
                             IsCorrect = false,
                             QuestionModelId = 18,
-                            Text = "Option 2"
+                            Text = "It automatically blocks all cookies and browser trackers."
                         },
                         new
                         {
                             Id = 54,
                             IsCorrect = false,
                             QuestionModelId = 18,
-                            Text = "Option 3"
+                            Text = "It makes the user completely immune to all types of phishing attacks."
                         },
                         new
                         {
                             Id = 55,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 19,
-                            Text = "Option 1"
+                            Text = "Per-App VPN (or Application-level VPN).(R)"
                         },
                         new
                         {
                             Id = 56,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 19,
-                            Text = "Rätt"
+                            Text = "Full-tunnel network VPN."
                         },
                         new
                         {
                             Id = 57,
                             IsCorrect = false,
                             QuestionModelId = 19,
-                            Text = "Option 3"
+                            Text = "Intranet VPN."
                         },
                         new
                         {
                             Id = 58,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 20,
-                            Text = "Option 1"
+                            Text = "A VPN encrypts all network traffic, while a proxy server typically only routes traffic and often lacks encryption.(R)"
                         },
                         new
                         {
                             Id = 59,
                             IsCorrect = false,
                             QuestionModelId = 20,
-                            Text = "Option 2"
+                            Text = "A proxy server is always paid, while a VPN is always open-source and free."
                         },
                         new
                         {
                             Id = 60,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 20,
-                            Text = "Rätt"
+                            Text = "A VPN only works on mobile devices, while a proxy server only works on desktop computers."
                         },
                         new
                         {
                             Id = 61,
                             IsCorrect = true,
                             QuestionModelId = 21,
-                            Text = "Rätt"
+                            Text = "To monitor a network for malicious activity and generate alerts.(R)"
                         },
                         new
                         {
                             Id = 62,
                             IsCorrect = false,
                             QuestionModelId = 21,
-                            Text = "Option 2"
+                            Text = "To automatically encrypt all outgoing network traffic."
                         },
                         new
                         {
                             Id = 63,
                             IsCorrect = false,
                             QuestionModelId = 21,
-                            Text = "Option 3"
+                            Text = "To act as a physical barrier against unauthorized hardware."
                         },
                         new
                         {
                             Id = 64,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 22,
-                            Text = "Option 1"
+                            Text = "Network-based Intrusion Detection System (NIDS).(R)"
                         },
                         new
                         {
                             Id = 65,
                             IsCorrect = false,
                             QuestionModelId = 22,
-                            Text = "Option 2"
+                            Text = "Host-based Intrusion Detection System (HIDS)."
                         },
                         new
                         {
                             Id = 66,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 22,
-                            Text = "Rätt"
+                            Text = "Web Application Firewall (WAF)."
                         },
                         new
                         {
                             Id = 67,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 23,
-                            Text = "Option 1"
+                            Text = "Signature compares known patterns; anomaly looks for unusual deviations.(R)"
                         },
                         new
                         {
                             Id = 68,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 23,
-                            Text = "Rätt"
+                            Text = "Signature monitors incoming traffic; anomaly monitors outgoing."
                         },
                         new
                         {
                             Id = 69,
                             IsCorrect = false,
                             QuestionModelId = 23,
-                            Text = "Option 3"
+                            Text = "Signature requires internet; anomaly works entirely offline."
                         },
                         new
                         {
                             Id = 70,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 24,
-                            Text = "Option 1"
+                            Text = "Intrusion Prevention System (IPS) or Active IDS.(R)"
                         },
                         new
                         {
                             Id = 71,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 24,
-                            Text = "Rätt"
+                            Text = "Passive IDS."
                         },
                         new
                         {
                             Id = 72,
                             IsCorrect = false,
                             QuestionModelId = 24,
-                            Text = "Option 3"
+                            Text = "Honeypot."
                         },
                         new
                         {
                             Id = 73,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 25,
-                            Text = "Option 1"
+                            Text = "It acts as an internal alarm for breaches that bypass outer defenses.(R)"
                         },
                         new
                         {
                             Id = 74,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 25,
-                            Text = "Rätt"
+                            Text = "It routes all internet traffic for the organization."
                         },
                         new
                         {
                             Id = 75,
                             IsCorrect = false,
                             QuestionModelId = 25,
-                            Text = "Option 3"
+                            Text = "It is responsible for managing user passwords."
                         },
                         new
                         {
                             Id = 76,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 26,
-                            Text = "Option 1"
+                            Text = "A distributed Network-based Intrusion Detection System (NIDS).(R)"
                         },
                         new
                         {
                             Id = 77,
                             IsCorrect = false,
                             QuestionModelId = 26,
-                            Text = "Option 2"
+                            Text = "A standalone personal antivirus scanner."
                         },
                         new
                         {
                             Id = 78,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 26,
-                            Text = "Rätt"
+                            Text = "A basic stateless hardware router."
                         },
                         new
                         {
                             Id = 79,
                             IsCorrect = true,
                             QuestionModelId = 27,
-                            Text = "Rätt"
+                            Text = "An IDS only detects threats; an IPS actively blocks them.(R)"
                         },
                         new
                         {
                             Id = 80,
                             IsCorrect = false,
                             QuestionModelId = 27,
-                            Text = "Option 2"
+                            Text = "An IDS is hardware-based; an IPS is software-based."
                         },
                         new
                         {
                             Id = 81,
                             IsCorrect = false,
                             QuestionModelId = 27,
-                            Text = "Option 3"
+                            Text = "An IDS protects databases; an IPS protects web browsers."
                         },
                         new
                         {
                             Id = 82,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 28,
-                            Text = "Option 1"
+                            Text = "Deep Packet Inspection (DPI) enabled IDS.(R)"
                         },
                         new
                         {
                             Id = 83,
                             IsCorrect = false,
                             QuestionModelId = 28,
-                            Text = "Option 2"
+                            Text = "A standard Layer 3 packet sniffer."
                         },
                         new
                         {
                             Id = 84,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 28,
-                            Text = "Rätt"
+                            Text = "Circuit-level gateway."
                         },
                         new
                         {
                             Id = 85,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 29,
-                            Text = "Option 1"
+                            Text = "A decoy system to lure attackers and safely study their methods.(R)"
                         },
                         new
                         {
                             Id = 86,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 29,
-                            Text = "Rätt"
+                            Text = "To permanently store encrypted backups of sensitive data."
                         },
                         new
                         {
                             Id = 87,
                             IsCorrect = false,
                             QuestionModelId = 29,
-                            Text = "Option 3"
+                            Text = "To speed up legitimate user traffic by caching files."
                         },
                         new
                         {
                             Id = 88,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 30,
-                            Text = "Option 1"
+                            Text = "Host-based Intrusion Detection System (HIDS) or UEBA.(R)"
                         },
                         new
                         {
                             Id = 89,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 30,
-                            Text = "Rätt"
+                            Text = "Perimeter firewall."
                         },
                         new
                         {
                             Id = 90,
                             IsCorrect = false,
                             QuestionModelId = 30,
-                            Text = "Option 3"
+                            Text = "Site-to-site VPN."
                         },
                         new
                         {
                             Id = 91,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 31,
-                            Text = "Option 1"
+                            Text = "Encryption where the same secret key is used to encrypt and decrypt data.(R)"
                         },
                         new
                         {
                             Id = 92,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 31,
-                            Text = "Rätt"
+                            Text = "Encryption using a public key to encrypt and private to decrypt."
                         },
                         new
                         {
                             Id = 93,
                             IsCorrect = false,
                             QuestionModelId = 31,
-                            Text = "Option 3"
+                            Text = "A one-way mathematical hashing method."
                         },
                         new
                         {
                             Id = 94,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 32,
-                            Text = "Option 1"
+                            Text = "It is typically much faster than asymmetric encryption.(R)"
                         },
                         new
                         {
                             Id = 95,
                             IsCorrect = false,
                             QuestionModelId = 32,
-                            Text = "Option 2"
+                            Text = "It requires two mathematically linked keys."
                         },
                         new
                         {
                             Id = 96,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 32,
-                            Text = "Rätt"
+                            Text = "It is completely immune to brute-force attacks."
                         },
                         new
                         {
                             Id = 97,
                             IsCorrect = true,
                             QuestionModelId = 33,
-                            Text = "Rätt"
+                            Text = "Advanced Encryption Standard (AES).(R)"
                         },
                         new
                         {
                             Id = 98,
                             IsCorrect = false,
                             QuestionModelId = 33,
-                            Text = "Option 2"
+                            Text = "Rivest-Shamir-Adleman (RSA)."
                         },
                         new
                         {
                             Id = 99,
                             IsCorrect = false,
                             QuestionModelId = 33,
-                            Text = "Option 3"
+                            Text = "Elliptic Curve Cryptography (ECC)."
                         },
                         new
                         {
                             Id = 100,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 34,
-                            Text = "Option 1"
+                            Text = "Symmetric uses one shared key; asymmetric uses a public/private key pair.(R)"
                         },
                         new
                         {
                             Id = 101,
                             IsCorrect = false,
                             QuestionModelId = 34,
-                            Text = "Option 2"
+                            Text = "Symmetric is for digital signatures; asymmetric is for data storage."
                         },
                         new
                         {
                             Id = 102,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 34,
-                            Text = "Rätt"
+                            Text = "Symmetric encryption is significantly slower than asymmetric."
                         },
                         new
                         {
                             Id = 103,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 35,
-                            Text = "Option 1"
+                            Text = "The single piece of information required by both parties to lock and unlock data.(R)"
                         },
                         new
                         {
                             Id = 104,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 35,
-                            Text = "Rätt"
+                            Text = "A key publicly shared with anyone."
                         },
                         new
                         {
                             Id = 105,
                             IsCorrect = false,
                             QuestionModelId = 35,
-                            Text = "Option 3"
+                            Text = "A digital certificate to verify sender identity."
                         },
                         new
                         {
                             Id = 106,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 36,
-                            Text = "Option 1"
+                            Text = "Lightweight cryptography or stream ciphers (like RC4).(R)"
                         },
                         new
                         {
                             Id = 107,
                             IsCorrect = false,
                             QuestionModelId = 36,
-                            Text = "Option 2"
+                            Text = "RSA-4096."
                         },
                         new
                         {
                             Id = 108,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 36,
-                            Text = "Rätt"
+                            Text = "SHA-256."
                         },
                         new
                         {
                             Id = 109,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 37,
-                            Text = "Option 1"
+                            Text = "To encrypt data in fixed-size chunks (blocks) rather than bit-by-bit.(R)"
                         },
                         new
                         {
                             Id = 110,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 37,
-                            Text = "Rätt"
+                            Text = "To block unauthorized IP addresses."
                         },
                         new
                         {
                             Id = 111,
                             IsCorrect = false,
                             QuestionModelId = 37,
-                            Text = "Option 3"
+                            Text = "To compress data before sending."
                         },
                         new
                         {
                             Id = 112,
                             IsCorrect = true,
                             QuestionModelId = 38,
-                            Text = "Rätt"
+                            Text = "AES-256.(R)"
                         },
                         new
                         {
                             Id = 113,
                             IsCorrect = false,
                             QuestionModelId = 38,
-                            Text = "Option 2"
+                            Text = "Data Encryption Standard (DES)."
                         },
                         new
                         {
                             Id = 114,
                             IsCorrect = false,
                             QuestionModelId = 38,
-                            Text = "Option 3"
+                            Text = "Message-Digest algorithm 5 (MD5)."
                         },
                         new
                         {
                             Id = 115,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 39,
-                            Text = "Option 1"
+                            Text = "To securely share the single secret key over an insecure channel.(R)"
                         },
                         new
                         {
                             Id = 116,
                             IsCorrect = false,
                             QuestionModelId = 39,
-                            Text = "Option 2"
+                            Text = "To constantly change the block size."
                         },
                         new
                         {
                             Id = 117,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 39,
-                            Text = "Rätt"
+                            Text = "To publicly broadcast the encryption key."
                         },
                         new
                         {
                             Id = 118,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 40,
-                            Text = "Option 1"
+                            Text = "Algorithms like Blowfish or RC4.(R)"
                         },
                         new
                         {
                             Id = 119,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 40,
-                            Text = "Rätt"
+                            Text = "AES-128."
                         },
                         new
                         {
                             Id = 120,
                             IsCorrect = false,
                             QuestionModelId = 40,
-                            Text = "Option 3"
+                            Text = "SHA-1."
                         },
                         new
                         {
                             Id = 121,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 41,
-                            Text = "Option 1"
+                            Text = "Encryption that uses a linked pair of keys—a public key and a private key.(R)"
                         },
                         new
                         {
                             Id = 122,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 41,
-                            Text = "Rätt"
+                            Text = "Encryption using a single shared secret key."
                         },
                         new
                         {
                             Id = 123,
                             IsCorrect = false,
                             QuestionModelId = 41,
-                            Text = "Option 3"
+                            Text = "A one-way non-reversible hashing function."
                         },
                         new
                         {
                             Id = 124,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 42,
-                            Text = "Option 1"
+                            Text = "Allows secure communication without sharing a secret key beforehand.(R)"
                         },
                         new
                         {
                             Id = 125,
                             IsCorrect = false,
                             QuestionModelId = 42,
-                            Text = "Option 2"
+                            Text = "Processes data much faster than symmetric encryption."
                         },
                         new
                         {
                             Id = 126,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 42,
-                            Text = "Rätt"
+                            Text = "Requires a physical meeting to exchange passwords."
                         },
                         new
                         {
                             Id = 127,
                             IsCorrect = true,
                             QuestionModelId = 43,
-                            Text = "Rätt"
+                            Text = "RSA (Rivest-Shamir-Adleman).(R)"
                         },
                         new
                         {
                             Id = 128,
                             IsCorrect = false,
                             QuestionModelId = 43,
-                            Text = "Option 2"
+                            Text = "AES (Advanced Encryption Standard)."
                         },
                         new
                         {
                             Id = 129,
                             IsCorrect = false,
                             QuestionModelId = 43,
-                            Text = "Option 3"
+                            Text = "SHA-256."
                         },
                         new
                         {
                             Id = 130,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 44,
-                            Text = "Option 1"
+                            Text = "Asymmetric uses a key pair; symmetric uses a single shared key.(R)"
                         },
                         new
                         {
                             Id = 131,
                             IsCorrect = false,
                             QuestionModelId = 44,
-                            Text = "Option 2"
+                            Text = "Asymmetric is only for local storage."
                         },
                         new
                         {
                             Id = 132,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 44,
-                            Text = "Rätt"
+                            Text = "Asymmetric is significantly faster than symmetric."
                         },
                         new
                         {
                             Id = 133,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 45,
-                            Text = "Option 1"
+                            Text = "It is freely shared to encrypt data or verify a digital signature.(R)"
                         },
                         new
                         {
                             Id = 134,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 45,
-                            Text = "Rätt"
+                            Text = "It is kept secret and decrypts the message."
                         },
                         new
                         {
                             Id = 135,
                             IsCorrect = false,
                             QuestionModelId = 45,
-                            Text = "Option 3"
+                            Text = "It resets unauthorized access logs."
                         },
                         new
                         {
                             Id = 136,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 46,
-                            Text = "Option 1"
+                            Text = "Elliptic Curve Cryptography (ECC).(R)"
                         },
                         new
                         {
                             Id = 137,
                             IsCorrect = false,
                             QuestionModelId = 46,
-                            Text = "Option 2"
+                            Text = "Data Encryption Standard (DES)."
                         },
                         new
                         {
                             Id = 138,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 46,
-                            Text = "Rätt"
+                            Text = "Blowfish."
                         },
                         new
                         {
                             Id = 139,
                             IsCorrect = true,
                             QuestionModelId = 47,
-                            Text = "Rätt"
+                            Text = "To verify a message's authenticity and integrity.(R)"
                         },
                         new
                         {
                             Id = 140,
                             IsCorrect = false,
                             QuestionModelId = 47,
-                            Text = "Option 2"
+                            Text = "To encrypt the hard drive on logout."
                         },
                         new
                         {
                             Id = 141,
                             IsCorrect = false,
                             QuestionModelId = 47,
-                            Text = "Option 3"
+                            Text = "To compress files before sending over a network."
                         },
                         new
                         {
                             Id = 142,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 48,
-                            Text = "Option 1"
+                            Text = "RSA with key sizes of 2048 bits or higher.(R)"
                         },
                         new
                         {
                             Id = 143,
                             IsCorrect = false,
                             QuestionModelId = 48,
-                            Text = "Option 2"
+                            Text = "AES with a 256-bit key."
                         },
                         new
                         {
                             Id = 144,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 48,
-                            Text = "Rätt"
+                            Text = "Triple DES (3DES)."
                         },
                         new
                         {
                             Id = 145,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 49,
-                            Text = "Option 1"
+                            Text = "To securely establish a shared symmetric key (e.g., Diffie-Hellman).(R)"
                         },
                         new
                         {
                             Id = 146,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 49,
-                            Text = "Rätt"
+                            Text = "To translate IPv4 to IPv6."
                         },
                         new
                         {
                             Id = 147,
                             IsCorrect = false,
                             QuestionModelId = 49,
-                            Text = "Option 3"
+                            Text = "To block malware IP addresses."
                         },
                         new
                         {
                             Id = 148,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 50,
-                            Text = "Option 1"
+                            Text = "RSA, which allows variable key sizes (e.g., 1024, 2048).(R)"
                         },
                         new
                         {
                             Id = 149,
                             IsCorrect = false,
                             QuestionModelId = 50,
-                            Text = "Option 2"
+                            Text = "Stream ciphers like RC4."
                         },
                         new
                         {
                             Id = 150,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 50,
-                            Text = "Rätt"
+                            Text = "Block ciphers like AES."
                         },
                         new
                         {
                             Id = 151,
                             IsCorrect = true,
                             QuestionModelId = 51,
-                            Text = "Rätt"
+                            Text = "A one-way mathematical process that converts data into a fixed-size string.(R)"
                         },
                         new
                         {
                             Id = 152,
                             IsCorrect = false,
                             QuestionModelId = 51,
-                            Text = "Option 2"
+                            Text = "A two-way encryption method using public and private keys."
                         },
                         new
                         {
                             Id = 153,
                             IsCorrect = false,
                             QuestionModelId = 51,
-                            Text = "Option 3"
+                            Text = "A technique to compress files for faster network transmission."
                         },
                         new
                         {
                             Id = 154,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 52,
-                            Text = "Option 1"
+                            Text = "To verify data integrity and securely store passwords.(R)"
                         },
                         new
                         {
                             Id = 155,
                             IsCorrect = false,
                             QuestionModelId = 52,
-                            Text = "Option 2"
+                            Text = "To securely transmit encryption keys over the internet."
                         },
                         new
                         {
                             Id = 156,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 52,
-                            Text = "Rätt"
+                            Text = "To permanently erase data from a hard drive."
                         },
                         new
                         {
                             Id = 157,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 53,
-                            Text = "Option 1"
+                            Text = "SHA-256 (Secure Hash Algorithm 256).(R)"
                         },
                         new
                         {
                             Id = 158,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 53,
-                            Text = "Rätt"
+                            Text = "AES (Advanced Encryption Standard)."
                         },
                         new
                         {
                             Id = 159,
                             IsCorrect = false,
                             QuestionModelId = 53,
-                            Text = "Option 3"
+                            Text = "RSA (Rivest-Shamir-Adleman)."
                         },
                         new
                         {
                             Id = 160,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 54,
-                            Text = "Option 1"
+                            Text = "Hashing is one-way for data integrity, while encryption is two-way for confidentiality.(R)"
                         },
                         new
                         {
                             Id = 161,
                             IsCorrect = false,
                             QuestionModelId = 54,
-                            Text = "Option 2"
+                            Text = "Hashing uses public keys, while encryption uses shared keys."
                         },
                         new
                         {
                             Id = 162,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 54,
-                            Text = "Rätt"
+                            Text = "Hashing is only for emails, while encryption is only for databases."
                         },
                         new
                         {
                             Id = 163,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 55,
-                            Text = "Option 1"
+                            Text = "It mathematically converts an input of any length into a fixed-size output.(R)"
                         },
                         new
                         {
                             Id = 164,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 55,
-                            Text = "Rätt"
+                            Text = "It decrypts messages back into plain text."
                         },
                         new
                         {
                             Id = 165,
                             IsCorrect = false,
                             QuestionModelId = 55,
-                            Text = "Option 3"
+                            Text = "It assigns a random, hidden IP address to devices."
                         },
                         new
                         {
                             Id = 166,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 56,
-                            Text = "Option 1"
+                            Text = "Lightweight hash functions designed for IoT and constrained environments.(R)"
                         },
                         new
                         {
                             Id = 167,
                             IsCorrect = false,
                             QuestionModelId = 56,
-                            Text = "Option 2"
+                            Text = "SHA-512, which compresses its output to save space."
                         },
                         new
                         {
                             Id = 168,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 56,
-                            Text = "Rätt"
+                            Text = "RSA-2048."
                         },
                         new
                         {
                             Id = 169,
                             IsCorrect = true,
                             QuestionModelId = 57,
-                            Text = "Rätt"
+                            Text = "To add random data before hashing, preventing rainbow table attacks.(R)"
                         },
                         new
                         {
                             Id = 170,
                             IsCorrect = false,
                             QuestionModelId = 57,
-                            Text = "Option 2"
+                            Text = "To speed up the hashing process for large databases."
                         },
                         new
                         {
                             Id = 171,
                             IsCorrect = false,
                             QuestionModelId = 57,
-                            Text = "Option 3"
+                            Text = "To allow administrators to reverse the hash to the original password."
                         },
                         new
                         {
                             Id = 172,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 58,
-                            Text = "Option 1"
+                            Text = "SHA-512.(R)"
                         },
                         new
                         {
                             Id = 173,
                             IsCorrect = false,
                             QuestionModelId = 58,
-                            Text = "Option 2"
+                            Text = "MD5."
                         },
                         new
                         {
                             Id = 174,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 58,
-                            Text = "Rätt"
+                            Text = "CRC32."
                         },
                         new
                         {
                             Id = 175,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 59,
-                            Text = "Option 1"
+                            Text = "To intentionally slow down the hashing process, making brute-force attacks harder.(R)"
                         },
                         new
                         {
                             Id = 176,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 59,
-                            Text = "Rätt"
+                            Text = "To automatically increase the length of a short password."
                         },
                         new
                         {
                             Id = 177,
                             IsCorrect = false,
                             QuestionModelId = 59,
-                            Text = "Option 3"
+                            Text = "To stretch the hash output across multiple servers."
                         },
                         new
                         {
                             Id = 178,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 60,
-                            Text = "Option 1"
+                            Text = "Extendable-Output Functions (XOFs), like SHAKE128 or SHAKE256.(R)"
                         },
                         new
                         {
                             Id = 179,
                             IsCorrect = false,
                             QuestionModelId = 60,
-                            Text = "Option 2"
+                            Text = "SHA-256, which dynamically changes its digest size."
                         },
                         new
                         {
                             Id = 180,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 60,
-                            Text = "Rätt"
+                            Text = "AES-GCM."
                         },
                         new
                         {
                             Id = 181,
                             IsCorrect = true,
                             QuestionModelId = 61,
-                            Text = "Rätt"
+                            Text = "A vulnerability where an attacker interferes with an application's database queries.(R)"
                         },
                         new
                         {
                             Id = 182,
                             IsCorrect = false,
                             QuestionModelId = 61,
-                            Text = "Option 2"
+                            Text = "A standard method to safely encrypt database passwords."
                         },
                         new
                         {
                             Id = 183,
                             IsCorrect = false,
                             QuestionModelId = 61,
-                            Text = "Option 3"
+                            Text = "A tool developers use to speed up slow database connections."
                         },
                         new
                         {
                             Id = 184,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 62,
-                            Text = "Option 1"
+                            Text = "To view, modify, or delete unauthorized data in a database.(R)"
                         },
                         new
                         {
                             Id = 185,
                             IsCorrect = false,
                             QuestionModelId = 62,
-                            Text = "Option 2"
+                            Text = "To trick users into clicking malicious email links."
                         },
                         new
                         {
                             Id = 186,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 62,
-                            Text = "Rätt"
+                            Text = "To permanently physically damage the server's hard drive."
                         },
                         new
                         {
                             Id = 187,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 63,
-                            Text = "Option 1"
+                            Text = "Entering malicious SQL commands into input fields like login forms.(R)"
                         },
                         new
                         {
                             Id = 188,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 63,
-                            Text = "Rätt"
+                            Text = "Sending millions of fake network packets to crash the server."
                         },
                         new
                         {
                             Id = 189,
                             IsCorrect = false,
                             QuestionModelId = 63,
-                            Text = "Option 3"
+                            Text = "Guessing user passwords using a dictionary file."
                         },
                         new
                         {
                             Id = 190,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 64,
-                            Text = "Option 1"
+                            Text = "SQL injection specifically targets relational databases, not the OS or web browser.(R)"
                         },
                         new
                         {
                             Id = 191,
                             IsCorrect = false,
                             QuestionModelId = 64,
-                            Text = "Option 2"
+                            Text = "SQL injection only works on mobile applications."
                         },
                         new
                         {
                             Id = 192,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 64,
-                            Text = "Rätt"
+                            Text = "SQL injection is a legal technique used for data backups."
                         },
                         new
                         {
                             Id = 193,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 65,
-                            Text = "Option 1"
+                            Text = "It ensures only safe, expected characters are accepted by the application.(R)"
                         },
                         new
                         {
                             Id = 194,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 65,
-                            Text = "Rätt"
+                            Text = "It automatically translates all input into HTML code."
                         },
                         new
                         {
                             Id = 195,
                             IsCorrect = false,
                             QuestionModelId = 65,
-                            Text = "Option 3"
+                            Text = "It physically blocks IP addresses from unknown countries."
                         },
                         new
                         {
                             Id = 196,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 66,
-                            Text = "Option 1"
+                            Text = "UNION-based or Error-based SQL injection.(R)"
                         },
                         new
                         {
                             Id = 197,
                             IsCorrect = false,
                             QuestionModelId = 66,
-                            Text = "Option 2"
+                            Text = "Ransomware data injection."
                         },
                         new
                         {
                             Id = 198,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 66,
-                            Text = "Rätt"
+                            Text = "Cross-Site Scripting (XSS)."
                         },
                         new
                         {
                             Id = 199,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 67,
-                            Text = "Option 1"
+                            Text = "They separate the SQL code from the user's data, making malicious input harmless.(R)"
                         },
                         new
                         {
                             Id = 200,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 67,
-                            Text = "Rätt"
+                            Text = "They delete the entire database if an attack is detected."
                         },
                         new
                         {
                             Id = 201,
                             IsCorrect = false,
                             QuestionModelId = 67,
-                            Text = "Option 3"
+                            Text = "They compress the database size for faster loading times."
                         },
                         new
                         {
                             Id = 202,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 68,
-                            Text = "Option 1"
+                            Text = "Injecting UPDATE, INSERT, or DELETE statements.(R)"
                         },
                         new
                         {
                             Id = 203,
                             IsCorrect = false,
                             QuestionModelId = 68,
-                            Text = "Option 2"
+                            Text = "Using the SELECT statement to read tables."
                         },
                         new
                         {
                             Id = 204,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 68,
-                            Text = "Rätt"
+                            Text = "Using the PING command to test network speed."
                         },
                         new
                         {
                             Id = 205,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 69,
-                            Text = "Option 1"
+                            Text = "It inspects incoming web traffic and blocks known SQL attack patterns.(R)"
                         },
                         new
                         {
                             Id = 206,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 69,
-                            Text = "Rätt"
+                            Text = "It unplugs the database server when it gets too hot."
                         },
                         new
                         {
                             Id = 207,
                             IsCorrect = false,
                             QuestionModelId = 69,
-                            Text = "Option 3"
+                            Text = "It forces users to change their database passwords every 30 days."
                         },
                         new
                         {
                             Id = 208,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 70,
-                            Text = "Option 1"
+                            Text = "Exploiting database features like xp_cmdshell to run OS commands.(R)"
                         },
                         new
                         {
                             Id = 209,
                             IsCorrect = false,
                             QuestionModelId = 70,
-                            Text = "Option 2"
+                            Text = "Phishing SQL injection."
                         },
                         new
                         {
                             Id = 210,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 70,
-                            Text = "Rätt"
+                            Text = "Man-in-the-middle SQL injection."
                         },
                         new
                         {
                             Id = 211,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 71,
-                            Text = "Option 1"
+                            Text = "Injecting malicious scripts into otherwise benign and trusted websites.(R)"
                         },
                         new
                         {
                             Id = 212,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 71,
-                            Text = "Rätt"
+                            Text = "Overloading a server with traffic to crash it."
                         },
                         new
                         {
                             Id = 213,
                             IsCorrect = false,
                             QuestionModelId = 71,
-                            Text = "Option 3"
+                            Text = "Intercepting data between a database and a web server."
                         },
                         new
                         {
                             Id = 214,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 72,
-                            Text = "Option 1"
+                            Text = "To execute malicious code in a victim's web browser.(R)"
                         },
                         new
                         {
                             Id = 215,
                             IsCorrect = false,
                             QuestionModelId = 72,
-                            Text = "Option 2"
+                            Text = "To gain direct administrative access to the backend database."
                         },
                         new
                         {
                             Id = 216,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 72,
-                            Text = "Rätt"
+                            Text = "To crack user passwords using brute force."
                         },
                         new
                         {
                             Id = 217,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 73,
-                            Text = "Option 1"
+                            Text = "Injecting malicious JavaScript payloads.(R)"
                         },
                         new
                         {
                             Id = 218,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 73,
-                            Text = "Rätt"
+                            Text = "Executing unauthorized SQL database queries."
                         },
                         new
                         {
                             Id = 219,
                             IsCorrect = false,
                             QuestionModelId = 73,
-                            Text = "Option 3"
+                            Text = "Exploiting hardware router misconfigurations."
                         },
                         new
                         {
                             Id = 220,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 74,
-                            Text = "Option 1"
+                            Text = "XSS targets the user's browser, while SQLi targets the backend database.(R)"
                         },
                         new
                         {
                             Id = 221,
                             IsCorrect = false,
                             QuestionModelId = 74,
-                            Text = "Option 2"
+                            Text = "XSS only affects mobile apps, while SQLi affects desktop apps."
                         },
                         new
                         {
                             Id = 222,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 74,
-                            Text = "Rätt"
+                            Text = "XSS requires physical access to the target machine."
                         },
                         new
                         {
                             Id = 223,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 75,
-                            Text = "Option 1"
+                            Text = "It ensures only safe, expected characters are processed by the application.(R)"
                         },
                         new
                         {
                             Id = 224,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 75,
-                            Text = "Rätt"
+                            Text = "It automatically blocks IP addresses from unknown locations."
                         },
                         new
                         {
                             Id = 225,
                             IsCorrect = false,
                             QuestionModelId = 75,
-                            Text = "Option 3"
+                            Text = "It automatically encrypts user passwords in the database."
                         },
                         new
                         {
                             Id = 226,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 76,
-                            Text = "Option 1"
+                            Text = "A payload that accesses document.cookie to steal active session tokens.(R)"
                         },
                         new
                         {
                             Id = 227,
                             IsCorrect = false,
                             QuestionModelId = 76,
-                            Text = "Option 2"
+                            Text = "A payload that permanently deletes database tables."
                         },
                         new
                         {
                             Id = 228,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 76,
-                            Text = "Rätt"
+                            Text = "A payload that resets the user's home internet router."
                         },
                         new
                         {
                             Id = 229,
                             IsCorrect = true,
                             QuestionModelId = 77,
-                            Text = "Rätt"
+                            Text = "It converts special characters into safe HTML entities so they display safely instead of executing.(R)"
                         },
                         new
                         {
                             Id = 230,
                             IsCorrect = false,
                             QuestionModelId = 77,
-                            Text = "Option 2"
+                            Text = "It compresses website images for faster loading times."
                         },
                         new
                         {
                             Id = 231,
                             IsCorrect = false,
                             QuestionModelId = 77,
-                            Text = "Option 3"
+                            Text = "It hides the website's source code from visitors."
                         },
                         new
                         {
                             Id = 232,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 78,
-                            Text = "Option 1"
+                            Text = "Stored XSS, where the malicious script is permanently saved on the server and shown to all visitors.(R)"
                         },
                         new
                         {
                             Id = 233,
                             IsCorrect = false,
                             QuestionModelId = 78,
-                            Text = "Option 2"
+                            Text = "Phishing XSS, where users are tricked via email."
                         },
                         new
                         {
                             Id = 234,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 78,
-                            Text = "Rätt"
+                            Text = "Hardware XSS, targeting the physical server components."
                         },
                         new
                         {
                             Id = 235,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 79,
-                            Text = "Option 1"
+                            Text = "It restricts which external scripts can be loaded and executed by the browser.(R)"
                         },
                         new
                         {
                             Id = 236,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 79,
-                            Text = "Rätt"
+                            Text = "It automatically updates the server's operating system."
                         },
                         new
                         {
                             Id = 237,
                             IsCorrect = false,
                             QuestionModelId = 79,
-                            Text = "Option 3"
+                            Text = "It physically blocks users from taking screenshots of the website."
                         },
                         new
                         {
                             Id = 238,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 80,
-                            Text = "Option 1"
+                            Text = "Reflected XSS, where the script bounces off the web server directly to the victim via a crafted link.(R)"
                         },
                         new
                         {
                             Id = 239,
                             IsCorrect = false,
                             QuestionModelId = 80,
-                            Text = "Option 2"
+                            Text = "Ransomware XSS, which encrypts the user's hard drive."
                         },
                         new
                         {
                             Id = 240,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 80,
-                            Text = "Rätt"
+                            Text = "DDoS XSS, which crashes the victim's computer hardware."
                         },
                         new
                         {
                             Id = 241,
                             IsCorrect = true,
                             QuestionModelId = 81,
-                            Text = "Rätt"
+                            Text = "An attack that forces an authenticated user to execute unwanted actions on a web application.(R)"
                         },
                         new
                         {
                             Id = 242,
                             IsCorrect = false,
                             QuestionModelId = 81,
-                            Text = "Option 2"
+                            Text = "A method used by developers to securely encrypt data in transit."
                         },
                         new
                         {
                             Id = 243,
                             IsCorrect = false,
                             QuestionModelId = 81,
-                            Text = "Option 3"
+                            Text = "A technique used to optimize backend database queries."
                         },
                         new
                         {
                             Id = 244,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 82,
-                            Text = "Option 1"
+                            Text = "To trick a victim's browser into performing actions they didn't intend, like transferring funds.(R)"
                         },
                         new
                         {
                             Id = 245,
                             IsCorrect = false,
                             QuestionModelId = 82,
-                            Text = "Option 2"
+                            Text = "To physically damage the target server's hard drives."
                         },
                         new
                         {
                             Id = 246,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 82,
-                            Text = "Rätt"
+                            Text = "To directly extract encrypted passwords from the database."
                         },
                         new
                         {
                             Id = 247,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 83,
-                            Text = "Option 1"
+                            Text = "Social engineering, like sending a malicious link, to trigger the forged request.(R)"
                         },
                         new
                         {
                             Id = 248,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 83,
-                            Text = "Rätt"
+                            Text = "Brute-forcing admin passwords."
                         },
                         new
                         {
                             Id = 249,
                             IsCorrect = false,
                             QuestionModelId = 83,
-                            Text = "Option 3"
+                            Text = "Man-in-the-middle physical cable tapping."
                         },
                         new
                         {
                             Id = 250,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 84,
-                            Text = "Option 1"
+                            Text = "CSRF exploits the site's trust in the browser, while XSS exploits the user's trust in the site.(R)"
                         },
                         new
                         {
                             Id = 251,
                             IsCorrect = false,
                             QuestionModelId = 84,
-                            Text = "Option 2"
+                            Text = "CSRF only targets mobile applications."
                         },
                         new
                         {
                             Id = 252,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 84,
-                            Text = "Rätt"
+                            Text = "CSRF relies entirely on hardware failure."
                         },
                         new
                         {
                             Id = 253,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 85,
-                            Text = "Option 1"
+                            Text = "It offers minimal protection, as forged CSRF requests often contain perfectly valid input data.(R)"
                         },
                         new
                         {
                             Id = 254,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 85,
-                            Text = "Rätt"
+                            Text = "It is the only guaranteed way to stop CSRF attacks completely."
                         },
                         new
                         {
                             Id = 255,
                             IsCorrect = false,
                             QuestionModelId = 85,
-                            Text = "Option 3"
+                            Text = "It automatically disconnects the attacker's IP address."
                         },
                         new
                         {
                             Id = 256,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 86,
-                            Text = "Option 1"
+                            Text = "Login CSRF, where an attacker logs the victim into the attacker's account to capture their activity.(R)"
                         },
                         new
                         {
                             Id = 257,
                             IsCorrect = false,
                             QuestionModelId = 86,
-                            Text = "Option 2"
+                            Text = "Ransomware CSRF."
                         },
                         new
                         {
                             Id = 258,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 86,
-                            Text = "Rätt"
+                            Text = "Hardware CSRF."
                         },
                         new
                         {
                             Id = 259,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 87,
-                            Text = "Option 1"
+                            Text = "To ensure the request originated from the legitimate app by requiring a unique, unpredictable hidden value.(R)"
                         },
                         new
                         {
                             Id = 260,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 87,
-                            Text = "Rätt"
+                            Text = "To automatically compress HTTP requests to save bandwidth."
                         },
                         new
                         {
                             Id = 261,
                             IsCorrect = false,
                             QuestionModelId = 87,
-                            Text = "Option 3"
+                            Text = "To block all incoming internet traffic during maintenance."
                         },
                         new
                         {
                             Id = 262,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 88,
-                            Text = "Option 1"
+                            Text = "State-changing requests, such as updating an email address or changing a password.(R)"
                         },
                         new
                         {
                             Id = 263,
                             IsCorrect = false,
                             QuestionModelId = 88,
-                            Text = "Option 2"
+                            Text = "Bandwidth-draining requests."
                         },
                         new
                         {
                             Id = 264,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 88,
-                            Text = "Rätt"
+                            Text = "Network ping requests."
                         },
                         new
                         {
                             Id = 265,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 89,
-                            Text = "Option 1"
+                            Text = "It can inspect HTTP headers (like Referer or Origin) to block requests from unexpected external domains.(R)"
                         },
                         new
                         {
                             Id = 266,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 89,
-                            Text = "Rätt"
+                            Text = "It unplugs the server if multiple CSRF attacks are detected."
                         },
                         new
                         {
                             Id = 267,
                             IsCorrect = false,
                             QuestionModelId = 89,
-                            Text = "Option 3"
+                            Text = "It forces all users to use two-factor authentication."
                         },
                         new
                         {
                             Id = 268,
-                            IsCorrect = false,
+                            IsCorrect = true,
                             QuestionModelId = 90,
-                            Text = "Option 1"
+                            Text = "CSRF itself doesn't execute commands directly, but it can trigger administrative functions if the victim is an admin.(R)"
                         },
                         new
                         {
                             Id = 269,
-                            IsCorrect = true,
+                            IsCorrect = false,
                             QuestionModelId = 90,
-                            Text = "Rätt"
+                            Text = "Buffer-overflow CSRF."
                         },
                         new
                         {
                             Id = 270,
                             IsCorrect = false,
                             QuestionModelId = 90,
-                            Text = "Option 3"
+                            Text = "Shell-shock CSRF."
                         });
                 });
 
@@ -2851,10 +2833,13 @@ namespace CyberQuiz.DAL.Migrations
                     b.Property<bool>("IsCompleted")
                         .HasColumnType("bit");
 
+                    b.Property<double>("ScorePercentage")
+                        .HasColumnType("float");
+
                     b.Property<int>("SubCategoryModelId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("UnlockedAt")
+                    b.Property<DateTime>("UnlockedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
