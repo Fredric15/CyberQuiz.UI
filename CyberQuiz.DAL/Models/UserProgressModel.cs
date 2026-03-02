@@ -22,6 +22,6 @@ namespace CyberQuiz.DAL.Models
         public bool IsCompleted { get; set; }
 
         // När underkategorin låstes upp (om den inte var upplåst från början)
-        public DateTime? UnlockedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UnlockedAt { get; set; } = DateTime.UtcNow;
     }
 }
