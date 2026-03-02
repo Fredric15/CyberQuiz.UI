@@ -1,26 +1,31 @@
-﻿using System;
+﻿using CyberQuiz.BLL.Services.Interfaces;
+using CyberQuiz.DAL.Models;
+using CyberQuiz.DAL.Repositories.Interfaces;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace CyberQuiz.BLL.Services
 {
-    //public class QuestionService : IQuestionService
-    //{
-    //    // !!ändrar till rätt databas context senare
-    //    //private readonly CyberQuizDbContext _context;
+    public class QuestionService : IQuestionService
+    {
+        private readonly IQuizRepository _quizRepository;
 
-    //    public QuestionService(CyberQuizDbContext context)
-    //    {
-    //        _context = context;
-    //    }
+        public QuestionService(IQuizRepository quizRepository)
+        {
+            _quizRepository = quizRepository;
+        }
 
-    //    // funkar senare när jag har fått entities från DAL
-    //    public async Task<IEnumerable<Question>> GetQuestionsBySubCategoryId(int subCategoryId)
-    //    {
-    //        return await _context.Questions
-    //            .Where(q => q.SubCategoryId == subCategoryId)
-    //            .Include(q => q.AnswerOptions)
-    //            .ToListAsync();
-    //    }
-    //}
+        public async Task<IEnumerable<QuestionModel>> GetQuestionsBySubCategoryId(int subCategoryId)
+        {
+            var subCategory = await _quizRepository.GetCompleteQuizByIdAsync(subCategoryId);
+            if (subCategory is null)
+            {
+                return [];
+            }
+
+            return subCategory.Quizzes.SelectMany(q => q.Questions).ToList();
+        }
+    }
 }

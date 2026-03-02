@@ -1,12 +1,13 @@
-﻿using System;
+﻿using CyberQuiz.DAL.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace CyberQuiz.BLL.Services.Interfaces
 {
-    //public interface IQuestionService
-    //{
-    //    // !!funkar senare när entities har kommit från DAL
-    //    Task<IEnumerable<Question>> GetQuestionsBySubCategoryId(int subCategoryId);
-    //}
+    public interface IQuestionService
+    {
+        
+        Task<IEnumerable<QuestionModel>> GetQuestionsBySubCategoryId(int subCategoryId);
+    }
 }
