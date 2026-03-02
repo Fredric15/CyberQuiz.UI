@@ -1,27 +1,43 @@
-using CyberQuiz.UI.Components;
+﻿using CyberQuiz.UI.Services;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
+// HttpClient för API
+builder.Services.AddHttpClient("CyberQuizApi", client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7179/"); // API URL
+});
+
+// Gör HttpClient tillgänglig för services
+builder.Services.AddScoped(sp =>
+{
+    var factory = sp.GetRequiredService<IHttpClientFactory>();
+    return factory.CreateClient("CyberQuizApi");
+});
+
+// Registrera UI‑services
+builder.Services.AddScoped<AuthApiClient>();
+builder.Services.AddScoped<CategoryApiClient>();
+builder.Services.AddScoped<QuestionApiClient>();
+builder.Services.AddScoped<ProgressApiClient>();
+builder.Services.AddScoped<AuthStateService>();
+
+// Blazor
+builder.Services.AddRazorPages();
+builder.Services.AddServerSideBlazor();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
-app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
-app.UseHttpsRedirection();
+// Serve static files from wwwroot (CSS, JS, images)
+app.UseStaticFiles();
 
-app.UseAntiforgery();
+// Enable routing for Blazor and other endpoints
+app.UseRouting();
 
-app.MapStaticAssets();
-app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
+app.MapBlazorHub();
+app.MapFallbackToPage("/_Host");
 
 app.Run();
+

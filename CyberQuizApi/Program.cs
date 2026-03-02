@@ -1,7 +1,5 @@
 using CyberQuiz.DAL.Data;
 using CyberQuiz.DAL.Models;
-using CyberQuiz.DAL.Repositories;
-using CyberQuiz.DAL.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -59,7 +57,7 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// Controllers + OpenAPI/Swagger
+// Controllers + OpenAPI
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddCors(options =>
@@ -72,7 +70,6 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Development tools
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();

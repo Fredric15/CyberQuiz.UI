@@ -16,6 +16,8 @@ namespace CyberQuiz.DAL.Models
         public int SubCategoryModelId { get; set; } // Koppla till SubCategoryModel
         public SubCategoryModel? SubCategory { get; set; }
 
+        public double ScorePercentage { get; set; } // Användarens poäng i procent för den specifika underkategorin
+
         // Är den avklarad?
         public bool IsCompleted { get; set; }
 
