@@ -9,10 +9,12 @@ using CyberQuiz.BLL.Services.Interfaces;
 using System.Text;
 using CyberQuiz.DAL.Repositories.Interfaces;
 using CyberQuiz.DAL.Repositories;
+using CyberQuiz.DAL.Data.SeedData;
+using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
- 
+
 
 // DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -77,6 +79,23 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+
+        // Kör seedningen
+        await SeedUser.SeedDefaultUserAsync(userManager);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Ett fel uppstod när seed-datan skulle läggas in.");
+    }
+}
+
 app.UseHttpsRedirection();
 app.UseCors("AllowUI");
 
@@ -85,5 +104,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+
+
 
 app.Run();
