@@ -18,7 +18,7 @@ namespace CyberQuiz.DAL.Data.SeedData
                 new OptionModel { Id = 3, Text = "Option 3", IsCorrect = false, QuestionModelId = 1 },
 
                 //Alternativ för fråga 2
-                new OptionModel { Id = 4, Text = "Option 1", IsCorrect = true, QuestionModelId = 2 },
+                new OptionModel { Id = 4, Text = "Rätt", IsCorrect = true, QuestionModelId = 2 },
                 new OptionModel { Id = 5, Text = "Option 2", IsCorrect = false, QuestionModelId = 2 },
                 new OptionModel { Id = 6, Text = "Option 3", IsCorrect = false, QuestionModelId = 2 },
 
