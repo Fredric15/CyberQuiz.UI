@@ -1,51 +1,56 @@
 ﻿@page "/"
+@using CyberQuiz.UI.Models
+@using CyberQuiz.UI.Services
+@using Microsoft.AspNetCore.Components.Forms
+@inject AuthApiClient AuthApi //Service som pratar med API:et
+@inject AuthStateService AuthState // Håller koll på vem som är inloggad
+@inject NavigationManager Nav
 
-<div class="auth-wrapper">
-    <div class="auth-panel">
-        <h2 class="auth-title">Välkommen tillbaka</h2>
-        <p class="auth-subtitle">Logga in för att fortsätta</p>
+<h3>Logga in</h3>
 
-        @if (!string.IsNullOrEmpty(ErrorMessage))
-        {
-            <div class="auth-error">@ErrorMessage</div>
-        }
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <p style="color:red">@ErrorMessage</p>
+}
 
-        <div class="auth-field">
-            <label>Email</label>
-            <input @bind="Email" type="email" />
-        </div>
+<EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
+    <DataAnnotationsValidator />
 
-        <div class="auth-field">
-            <label>Lösenord</label>
-            <input @bind="Password" type="password" />
-        </div>
-
-        <button class="auth-button" @onclick="HandleLogin">Logga in</button>
-
-        <p class="auth-switch">
-            Har du inget konto?
-            <a href="/register">Registrera dig</a>
-        </p>
+    <div>
+        <label>Email</label><br />
+        <InputText @bind-Value="loginModel.Email" />
     </div>
-</div>
+
+    <div style="margin-top:10px">
+        <label>Lösenord</label><br />
+        <InputText @bind-Value="loginModel.Password" type="password" />
+    </div>
+
+    <button type="submit" style="margin-top:15px">Logga in</button>
+</EditForm>
+
+<p style="margin-top:15px">
+    Har du inget konto?
+    <NavLink href="/register">Registrera dig</NavLink>
+</p>
 
 @code {
-    private string Email = "";
-    private string Password = "";
+    private LoginModel loginModel = new();
     private string? ErrorMessage;
 
     private async Task HandleLogin()
     {
-        await Task.Delay(500); // dummy
+        var (success, result, error) = await AuthApi.LoginAsync(loginModel.Email, loginModel.Password);
 
-        if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
+        if (!success)
         {
-            ErrorMessage = "Fyll i alla fält.";
+            ErrorMessage = error;
             return;
         }
 
-        Navigation.NavigateTo("/categories");
-    }
+        // Din AuthStateService kräver alla tre värden samtidigt
+        AuthState.SetUser(result!.Token, result.Email, result.UserName);
 
-    [Inject] NavigationManager Navigation { get; set; } = default!;
+        Nav.NavigateTo("/home", true);
+    }
 }
