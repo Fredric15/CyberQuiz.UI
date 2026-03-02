@@ -1,4 +1,6 @@
-﻿using CyberQuiz.BLL.Services.Interfaces;
+﻿using CyberQuiz.BLL.Models;
+using CyberQuiz.BLL.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
@@ -6,9 +8,8 @@ using System.Security.Claims;
 
 namespace CyberQuizApi.Controllers
 {
-
     [ApiController]
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     public class ProgressController : ControllerBase
     {
@@ -22,18 +23,18 @@ namespace CyberQuizApi.Controllers
         }
 
         [HttpGet("subcategories")]
-        public async Task<ActionResult<IEnumerable<SubCategoryProgressDto>>> GetSubCategoryProgress()
-        {
-            var userId = GetUserId();
-            if (userId is null)
-                return Unauthorized();
+        //public async Task<ActionResult<IEnumerable<SubCategoryProgressDto>>> GetSubCategoryProgress()
+        //{
+        //    var userId = GetUserId();
+        //    if (userId is null)
+        //        return Unauthorized();
 
-            var progress = await _progressService.GetProgressForUser(userId);
-            var response = progress
-                .Select(p => new SubCategoryProgressDto(p.SubCategoryModelId, p.IsCompleted, p.UnlockedAt));
+        //    var progress = await _progressService.GetProgressForUser(userId);
+        //    var response = progress
+        //        .Select(p => new SubCategoryProgressDto(p.SubCategoryModelId, p.ScorePercentage, p.IsCompleted, p.UnlockedAt));
 
-            return Ok(response);
-        }
+        //    return Ok(response);
+        //}
 
         [HttpPost("subcategories/submit")]
         public async Task<ActionResult<QuizSubmissionResponse>> SubmitSubCategory([FromBody] QuizSubmissionRequest request)
@@ -70,12 +71,10 @@ namespace CyberQuizApi.Controllers
         private string? GetUserId()
         {
             return User.FindFirstValue(JwtRegisteredClaimNames.Sub)
-                ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
+                ?? User.FindFirstValue("sub")
+                ?? User.FindFirstValue(ClaimTypes.NameIdentifier)
+                ?? User.FindFirstValue("nameid")
+                ?? User.FindFirstValue("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
         }
     }
-
-    public record SubCategoryProgressDto(int SubCategoryId, bool IsCompleted, DateTime? UpdatedAt);
-    public record QuizSubmissionResponse(double ScorePercentage, bool IsPassed);
-    public record QuizSubmissionRequest(int SubCategoryId, List<QuizAnswerDto> Answers);
-    public record QuizAnswerDto(int QuestionId, int AnswerOptionId);
 }
