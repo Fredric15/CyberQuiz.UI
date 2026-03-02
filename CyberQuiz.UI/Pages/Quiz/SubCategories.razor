@@ -1,7 +1,38 @@
-﻿@page "/subcategories"
+﻿@page "/categories/{CategoryId:int}"
+@using CyberQuiz.UI.Models
+@using CyberQuiz.UI.Services
+@inject CategoryApiClient CategoryApi
+@inject NavigationManager Navigation
 
-<h3>Questions</h3>
+<h1 class="mb-4">Välj delkategori</h1>
+
+<div class="row g-4">
+    @foreach (var sc in SubCategoriesList)
+    {
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <QuizCard Title="@sc.Title"
+                      Description="@sc.Description"
+                      Tag="@sc.Tag"
+                      OnClick="() => NavigateTo(sc.Id)" />
+        </div>
+		//skickar in datan från API:et och navigerar till rätt
+    }
+</div>
 
 @code {
+    [Parameter] public int CategoryId { get; set; }
 
+    private List<SubCategoryModel> SubCategoriesList = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        //hämta subkategorier från API
+        var result = await CategoryApi.GetSubCategoriesAsync(CategoryId);
+        SubCategoriesList = result.ToList();
+    }
+
+    private void NavigateTo(int subCategoryId)
+    {
+        Navigation.NavigateTo($"/questions/{subCategoryId}");
+    }
 }

@@ -1,0 +1,73 @@
+﻿@page "/details"
+@using CyberQuiz.UI.Models
+@using CyberQuiz.UI.Services
+@inject AuthStateService AuthState
+@inject UserApiClient UserApi
+@inject ProgressApiClient ProgressApi
+
+<h2>Mitt konto</h2>
+
+@if (Stats == null)
+{
+    <p>Laddar statistik...</p>
+}
+else
+{
+    <div class="stats-box">
+        <h3>Statistik</h3>
+        <p>Totalt rätt: @Stats.CorrectAnswers</p>
+        <p>Totalt frågor: @Stats.TotalQuestions</p>
+        <p>Procent rätt: @Stats.Percentage %</p>
+    </div>
+}
+
+<hr />
+
+<h3>Byt användarnamn</h3>
+<input @bind="NewUserName" placeholder="Nytt användarnamn" />
+<button @onclick="ChangeUserName">Spara</button>
+
+@if (!string.IsNullOrEmpty(UserNameMessage))
+{
+    <p>@UserNameMessage</p>
+}
+
+<hr />
+
+<h3>Byt lösenord</h3>
+<input type="password" @bind="CurrentPassword" placeholder="Nuvarande lösenord" />
+<input type="password" @bind="NewPassword" placeholder="Nytt lösenord" />
+<button @onclick="ChangePassword">Byt lösenord</button>
+
+@if (!string.IsNullOrEmpty(PasswordMessage))
+{
+    <p>@PasswordMessage</p>
+}
+
+@code {
+    private UserStatsModel? Stats;
+
+    private string NewUserName = "";
+    private string UserNameMessage = "";
+
+    private string CurrentPassword = "";
+    private string NewPassword = "";
+    private string PasswordMessage = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        Stats = await UserApi.GetUserStatsAsync();
+    }
+
+    private async Task ChangeUserName()
+    {
+        var ok = await UserApi.ChangeUserNameAsync(NewUserName);
+        UserNameMessage = ok ? "Användarnamn uppdaterat!" : "Kunde inte uppdatera användarnamn.";
+    }
+
+    private async Task ChangePassword()
+    {
+        var ok = await UserApi.ChangePasswordAsync(CurrentPassword, NewPassword);
+        PasswordMessage = ok ? "Lösenord uppdaterat!" : "Kunde inte uppdatera lösenord.";
+    }
+}
