@@ -1,4 +1,7 @@
 ﻿@page "/Error"
+@namespace CyberQuiz.UI.Pages
+
+
 @using System.Diagnostics
 
 <PageTitle>Error</PageTitle>
@@ -34,3 +37,4 @@
     protected override void OnInitialized() =>
         RequestId = Activity.Current?.Id ?? HttpContext?.TraceIdentifier;
 }
+ 

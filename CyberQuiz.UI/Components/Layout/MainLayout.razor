@@ -1,23 +1,49 @@
-﻿@inherits LayoutComponentBase
+﻿@namespace CyberQuiz.UI.Components.Layout
 
-<div class="page">
-    <div class="sidebar">
+
+
+@inherits LayoutComponentBase
+
+
+<div class="app-container d-flex">
+    <aside class="sidebar">
         <NavMenu />
-    </div>
+    </aside>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
-
-        <article class="content px-4">
+    <main class="content flex-fill">
+        <div class="content-inner">
             @Body
-        </article>
+        </div>
     </main>
 </div>
 
-<div id="blazor-error-ui" data-nosnippet>
-    An unhandled error has occurred.
-    <a href="." class="reload">Reload</a>
-    <span class="dismiss">🗙</span>
-</div>
+<style>
+    .app-container {
+        min-height: 100vh;
+        background-color: #f5f6fa;
+        font-family: "Segoe UI", Roboto, sans-serif;
+    }
+
+    .sidebar {
+        width: 260px;
+        background: linear-gradient(180deg, #1f2937 0%, #111827 100%);
+        color: white;
+        padding: 20px 0;
+        box-shadow: 2px 0 8px rgba(0,0,0,0.2);
+    }
+
+    .content {
+        padding: 40px;
+    }
+
+    .content-inner {
+        max-width: 600px;
+        margin: 0 auto;
+        background: white;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+</style>
+
+

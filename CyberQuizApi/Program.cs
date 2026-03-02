@@ -1,7 +1,5 @@
 using CyberQuiz.DAL.Data;
 using CyberQuiz.DAL.Models;
-using CyberQuiz.DAL.Repositories;
-using CyberQuiz.DAL.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using CyberQuiz.BLL.Services;
@@ -28,13 +26,12 @@ builder.Services.AddScoped<IProgressService, ProgressService>();
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>();
 
-// Controllers + OpenAPI/Swagger
+// Controllers + OpenAPI
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-// Development tools
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
