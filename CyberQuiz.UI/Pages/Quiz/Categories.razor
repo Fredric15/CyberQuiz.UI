@@ -1,0 +1,43 @@
+﻿@page "/categories"
+
+<h1 class="mb-4">Välj kategori</h1>
+
+<div class="row g-4">
+    @foreach (var c in CategoryList)
+    {
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <QuizCard 
+                Title="@c.Title"
+                Description="@c.Description"
+                Tag="@c.Tag"
+                OnClick="() => NavigateTo(c.Id)" />
+        </div>
+    }
+</div>
+
+@code {
+
+    public class CategoryDummy
+    {
+        public int Id { get; set; }
+        public string Title { get; set; } = "";
+        public string Description { get; set; } = "";
+        public string Tag { get; set; } = "";
+    }
+    private List<CategoryDummy> CategoryList= new()
+    {
+        new CategoryDummy { Id = 1, Title = "Matematik", Description = "Grundläggande matteövningar.", Tag = "Unlocked" },
+        new CategoryDummy { Id = 2, Title = "Historia", Description = "Utforska viktiga händelser.", Tag = "Locked" },
+        new CategoryDummy { Id = 3, Title = "Geografi", Description = "Lär dig om världen.", Tag = "Completed" },
+        new CategoryDummy { Id = 4, Title = "Programmering", Description = "Grunder i C#, variabler, loopar.", Tag = "Unlocked" }
+    };
+
+    private void NavigateTo(int id)
+    {
+        Navigation.NavigateTo($"/categories/{id}");
+    }
+
+    [Inject] NavigationManager Navigation { get; set; } = default!;
+}
+
+

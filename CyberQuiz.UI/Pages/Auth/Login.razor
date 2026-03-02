@@ -1,0 +1,56 @@
+﻿@page "/"
+@using CyberQuiz.UI.Models
+@using CyberQuiz.UI.Services
+@using Microsoft.AspNetCore.Components.Forms
+@inject AuthApiClient AuthApi //Service som pratar med API:et
+@inject AuthStateService AuthState // Håller koll på vem som är inloggad
+@inject NavigationManager Nav
+
+<h3>Logga in</h3>
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <p style="color:red">@ErrorMessage</p>
+}
+
+<EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
+    <DataAnnotationsValidator />
+
+    <div>
+        <label>Email</label><br />
+        <InputText @bind-Value="loginModel.Email" />
+    </div>
+
+    <div style="margin-top:10px">
+        <label>Lösenord</label><br />
+        <InputText @bind-Value="loginModel.Password" type="password" />
+    </div>
+
+    <button type="submit" style="margin-top:15px">Logga in</button>
+</EditForm>
+
+<p style="margin-top:15px">
+    Har du inget konto?
+    <NavLink href="/register">Registrera dig</NavLink>
+</p>
+
+@code {
+    private LoginModel loginModel = new();
+    private string? ErrorMessage;
+
+    private async Task HandleLogin()
+    {
+        var (success, result, error) = await AuthApi.LoginAsync(loginModel.Email, loginModel.Password);
+
+        if (!success)
+        {
+            ErrorMessage = error;
+            return;
+        }
+
+        // Din AuthStateService kräver alla tre värden samtidigt
+        AuthState.SetUser(result!.Token, result.Email, result.UserName);
+
+        Nav.NavigateTo("/home", true);
+    }
+}

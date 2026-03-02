@@ -1,0 +1,65 @@
+﻿@page "/register"
+
+<div class="auth-wrapper">
+    <div class="auth-panel">
+        <h2 class="auth-title">Skapa konto</h2>
+        <p class="auth-subtitle">Börja din resa här</p>
+
+        @if (!string.IsNullOrEmpty(ErrorMessage))
+        {
+            <div class="auth-error">@ErrorMessage</div>
+        }
+
+        <div class="auth-field">
+            <label>Email</label>
+            <input @bind="Email" type="email" />
+        </div>
+
+        <div class="auth-field">
+            <label>Lösenord</label>
+            <input @bind="Password" type="password" />
+        </div>
+
+        <div class="auth-field">
+            <label>Bekräfta lösenord</label>
+            <input @bind="ConfirmPassword" type="password" />
+        </div>
+
+        <button class="auth-button success" @onclick="HandleRegister">Registrera</button>
+
+        <p class="auth-switch">
+            Har du redan ett konto?
+            <a href="/">Logga in</a>
+        </p>
+    </div>
+</div>
+
+@code {
+    private string Email = "";
+    private string Password = "";
+    private string ConfirmPassword = "";
+    private string? ErrorMessage;
+
+    private async Task HandleRegister()
+    {
+        await Task.Delay(500); // dummy
+
+        if (string.IsNullOrWhiteSpace(Email) ||
+            string.IsNullOrWhiteSpace(Password) ||
+            string.IsNullOrWhiteSpace(ConfirmPassword))
+        {
+            ErrorMessage = "Fyll i alla fält.";
+            return;
+        }
+
+        if (Password != ConfirmPassword)
+        {
+            ErrorMessage = "Lösenorden matchar inte.";
+            return;
+        }
+
+        Navigation.NavigateTo("/");
+    }
+
+    [Inject] NavigationManager Navigation { get; set; } = default!;
+}

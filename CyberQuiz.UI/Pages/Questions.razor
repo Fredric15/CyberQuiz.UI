@@ -1,0 +1,167 @@
+﻿@page "/questions/{SubCategoryId:int}"
+@using CyberQuiz.UI.Models
+@using CyberQuiz.UI.Services
+@inject QuestionApiClient QuestionApi
+@inject ProgressApiClient ProgressApi
+@inject AuthStateService AuthState
+@inject NavigationManager Nav
+
+<div class="container mt-5">
+
+    @if (result != null)
+    {
+        <!-- RESULTAT-VY -->
+        <div class="card shadow-sm mx-auto text-center" style="max-width: 600px;">
+            <div class="card-body py-5">
+                <h2 class="mb-4">Quiz slutfört!</h2>
+
+                @if (result.Passed)
+                {
+                    <h3 class="text-success mt-3">Godkänd!</h3>
+                }
+                else
+                {
+                    <h3 class="text-danger mt-3">Inte godkänd</h3>
+                }
+
+                <p class="lead mt-4">
+                    Du fick <strong>@result.CorrectAnswers</strong> av <strong>@result.TotalQuestions</strong> rätt.
+                </p>
+
+                <p class="text-muted">@result.Message</p>
+
+                <button class="btn btn-primary mt-4" @onclick="GoHome">
+                    Tillbaka till menyn
+                </button>
+            </div>
+        </div>
+    }
+    else if (quiz == null)
+    {
+        <!-- LADDAR-VY -->
+        <div class="text-center">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p>Laddar quiz...</p>
+        </div>
+    }
+    else if (currentQuestionIndex < quiz.Questions.Count)
+    {
+        <!-- FRÅGE-VY -->
+        var currentQuestion = quiz.Questions[currentQuestionIndex];
+
+        <div class="card shadow-sm mx-auto" style="max-width: 600px;">
+            <div class="card-header bg-primary text-white d-flex justify-content-between">
+                <span>Fråga @(currentQuestionIndex + 1) av @quiz.Questions.Count</span>
+                <span>@quiz.Title</span>
+            </div>
+
+            <div class="card-body">
+                <h4 class="card-title mb-4">@currentQuestion.Text</h4>
+
+                <div class="list-group">
+                    @foreach (var option in currentQuestion.Options)
+                    {
+                        <button type="button"
+                                class="list-group-item list-group-item-action @(GetSelectedClass(option.Id))"
+                                @onclick="() => SelectOption(currentQuestion.Id, option.Id)">
+                            @option.Text
+                        </button>
+                    }
+                </div>
+            </div>
+
+            <div class="card-footer d-flex justify-content-between">
+                <button class="btn btn-secondary"
+                        @onclick="PreviousQuestion"
+                        disabled="@(currentQuestionIndex == 0)">
+                    Föregående
+                </button>
+
+                @if (currentQuestionIndex < quiz.Questions.Count - 1)
+                {
+                    <button class="btn btn-primary"
+                            @onclick="NextQuestion"
+                            disabled="@(!IsCurrentQuestionAnswered())">
+                        Nästa
+                    </button>
+                }
+                else
+                {
+                    <button class="btn btn-success"
+                            @onclick="SubmitQuiz"
+                            disabled="@(!IsAllQuestionsAnswered())">
+                        Slutför Quiz
+                    </button>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public int SubCategoryId { get; set; }
+
+    private QuizDetailsDto? quiz;
+    private QuizResultDto? result;
+
+    private int currentQuestionIndex = 0;
+
+    // QuestionId -> OptionId
+    private Dictionary<int, int> userAnswers = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Hämtar quiz-data via din QuestionApiClient
+        quiz = await QuestionApi.GetQuizDetailsAsync(SubCategoryId);
+    }
+
+    private void SelectOption(int questionId, int optionId)
+    {
+        userAnswers[questionId] = optionId;
+    }
+
+    private string GetSelectedClass(int optionId)
+        => userAnswers.Values.Contains(optionId) ? "active" : "";
+
+    private bool IsCurrentQuestionAnswered()
+        => quiz != null && userAnswers.ContainsKey(quiz.Questions[currentQuestionIndex].Id);
+
+    private bool IsAllQuestionsAnswered()
+        => quiz != null && userAnswers.Count == quiz.Questions.Count;
+
+    private void NextQuestion() => currentQuestionIndex++;
+    private void PreviousQuestion() => currentQuestionIndex--;
+
+    private async Task SubmitQuiz()
+    {
+        if (quiz == null)
+            return;
+
+        var userName = AuthState.UserName ?? "anonymous";
+
+        var submission = new QuizSubmissionRequestModel
+        {
+            QuizId = quiz.Id,
+            SubCategoryId = SubCategoryId,
+            UserName = userName,
+            Answers = userAnswers
+                .Select(a => new QuizAnswerModel { QuestionId = a.Key, AnswerOptionId = a.Value })
+                .ToList()
+        };
+
+        var serverResult = await ProgressApi.SubmitQuizAsync(submission);
+        if (serverResult != null)
+        {
+            result = new QuizResultDto
+            {
+                Passed = serverResult.IsPassed,
+                TotalQuestions = quiz.Questions.Count,
+                CorrectAnswers = (int)Math.Round(serverResult.ScorePercentage / 100.0 * quiz.Questions.Count),
+                Message = serverResult.IsPassed ? "Du klarade quizet." : "Du klarade inte quizet."
+            };
+        }
+    }
+
+    private void GoHome() => Nav.NavigateTo("/home");
+
+}
