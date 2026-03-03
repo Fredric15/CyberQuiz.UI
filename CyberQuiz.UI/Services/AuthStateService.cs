@@ -31,6 +31,16 @@ public class AuthStateService
         OnChange?.Invoke();
     }
 
+    public void UpdateProfile(string email, string userName)
+    {
+        if (!IsAuthenticated)
+            return;
+
+        Email = email;
+        UserName = userName;
+        OnChange?.Invoke();
+    }
+
     private static bool IsTokenExpired(string token)
     {
         try
