@@ -23,18 +23,18 @@ namespace CyberQuizApi.Controllers
         }
 
         [HttpGet("subcategories")]
-        //public async Task<ActionResult<IEnumerable<SubCategoryProgressDto>>> GetSubCategoryProgress()
-        //{
-        //    var userId = GetUserId();
-        //    if (userId is null)
-        //        return Unauthorized();
+        public async Task<ActionResult<IEnumerable<SubCategoryProgressDto>>> GetSubCategoryProgress()
+        {
+            var userId = GetUserId();
+            if (userId is null)
+                return Unauthorized();
 
-        //    var progress = await _progressService.GetProgressForUser(userId);
-        //    var response = progress
-        //        .Select(p => new SubCategoryProgressDto(p.SubCategoryModelId, p.ScorePercentage, p.IsCompleted, p.UnlockedAt));
+            var progress = await _progressService.GetProgressForUser(userId);
+            var response = progress
+                .Select(p => new SubCategoryProgressDto(p.SubCategoryModelId, p.ScorePercentage, p.IsCompleted, p.UnlockedAt));
 
-        //    return Ok(response);
-        //}
+            return Ok(response);
+        }
 
         [HttpPost("subcategories/submit")]
         public async Task<ActionResult<QuizSubmissionResponse>> SubmitSubCategory([FromBody] QuizSubmissionRequest request)
