@@ -1,4 +1,8 @@
 ﻿@page "/register"
+@using CyberQuiz.UI.Services
+@inject AuthApiClient AuthApi
+@inject AuthStateService AuthState
+@inject NavigationManager Nav
 
 <div class="auth-wrapper">
     <div class="auth-panel">
@@ -7,12 +11,17 @@
 
         @if (!string.IsNullOrEmpty(ErrorMessage))
         {
-            <div class="auth-error">@ErrorMessage</div>
+            <div class="auth-error">@((MarkupString)ErrorMessage)</div>
         }
 
         <div class="auth-field">
             <label>Email</label>
             <input @bind="Email" type="email" />
+        </div>
+
+        <div class="auth-field">
+            <label>Användarnamn</label>
+            <input @bind="UserName" type="text" />
         </div>
 
         <div class="auth-field">
@@ -36,15 +45,16 @@
 
 @code {
     private string Email = "";
+    private string UserName = "";
     private string Password = "";
     private string ConfirmPassword = "";
     private string? ErrorMessage;
 
     private async Task HandleRegister()
     {
-        await Task.Delay(500); // dummy
-
+        // UI-validering
         if (string.IsNullOrWhiteSpace(Email) ||
+            string.IsNullOrWhiteSpace(UserName) ||
             string.IsNullOrWhiteSpace(Password) ||
             string.IsNullOrWhiteSpace(ConfirmPassword))
         {
@@ -58,8 +68,20 @@
             return;
         }
 
-        Navigation.NavigateTo("/");
-    }
+        // Anropa API:t via AuthApiClient
+        var response = await AuthApi.RegisterAsync(UserName, Email, Password);
 
-    [Inject] NavigationManager Navigation { get; set; } = default!;
+        if (!response.Success)
+        {
+            // Visa API-fel
+            ErrorMessage = string.Join("<br>", response.Errors);
+            return;
+        }
+
+        // Spara användaren i AuthStateService
+        AuthState.SetUser(response.Result!.Token, response.Result.Email, response.Result.UserName);
+
+        // Navigera vidare
+        Nav.NavigateTo("/", true);
+    }
 }
