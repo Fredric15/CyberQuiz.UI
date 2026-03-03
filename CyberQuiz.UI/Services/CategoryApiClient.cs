@@ -1,4 +1,5 @@
 using CyberQuiz.UI.Models;
+using System.Net.Http.Json;
 
 namespace CyberQuiz.UI.Services;
 
@@ -23,9 +24,11 @@ public class CategoryApiClient
             ?? Enumerable.Empty<CategoryDetailModel>();
     }
 
-    public async Task<IEnumerable<SubCategoryModel>> GetSubCategories(int categoryId)
+    // 🔥 Den metod som SubCategories.razor anropar
+    public async Task<IEnumerable<SubCategoryModel>> GetSubCategoriesAsync(int categoryId)
     {
-        return await _httpClient.GetFromJsonAsync<IEnumerable<SubCategoryModel>>($"api/categories/{categoryId}/subcategories")
+        return await _httpClient.GetFromJsonAsync<IEnumerable<SubCategoryModel>>(
+            $"api/categories/{categoryId}/subcategories")
             ?? Enumerable.Empty<SubCategoryModel>();
     }
 }
