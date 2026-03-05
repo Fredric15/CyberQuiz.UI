@@ -7,21 +7,22 @@
         <p>@Description</p>
     </div>
 
-    @if (!string.IsNullOrEmpty(Tag))
+    @if (!Unlocked || Completed)
     {
-        <div class="quiz-card-tag">@Tag</div>
+        <div class="quiz-card-tag">@(!Unlocked ? "Låst": Completed ? "Genomförd": "")</div>
     }
 </div>
 
 @code {
     [Parameter] public string Title { get; set; } = "";
     [Parameter] public string Description { get; set; } = "";
-    [Parameter] public string? Tag { get; set; }
+    [Parameter] public bool Unlocked { get; set; }
+    [Parameter] public bool Completed { get; set;}
     [Parameter] public EventCallback OnClick { get; set; }
 
     private async Task HandleClick()
     {
-        if (OnClick.HasDelegate)
+        if (OnClick.HasDelegate && Unlocked)
             await OnClick.InvokeAsync();
     }
 }

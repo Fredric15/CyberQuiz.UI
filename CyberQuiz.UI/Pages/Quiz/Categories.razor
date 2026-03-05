@@ -1,36 +1,58 @@
 ﻿@page "/categories"
+@using CyberQuiz.UI.Components.Shared
+@inject CategoryApiClient CategoryApi
+@inject ProgressApiClient ProgressApi
 
 <h1 class="mb-4">Välj kategori</h1>
 
 <div class="row g-4">
-    @foreach (var c in CategoryList)
+    @foreach (var c in _categories)
     {
+        var isUnlocked = IsCategoryUnlocked(c);
+        var isCompleted = IsCategoryCompleted(c);
+
         <div class="col-12 col-sm-6 col-md-4 col-lg-3">
             <QuizCard 
                 Title="@c.Title"
-                Description="@c.Description"
-                Tag="@c.Tag"
-                OnClick="() => NavigateTo(c.Id)" />
+                Description="@c.Description"             
+                OnClick="() => NavigateTo(c.Id)" 
+                Unlocked="isUnlocked"
+                Completed="isCompleted"/>
         </div>
     }
 </div>
 
 @code {
+    private List<CategoryDetailModel> _categories = [];
+    private Dictionary<int, SubCategoryProgressModel> _progressBySubCategoryId = [];
 
-    public class CategoryDummy
+// public class CategoryDummy
+    // {
+    //     public int Id { get; set; }
+    //     public string Title { get; set; } = "";
+    //     public string Description { get; set; } = "";
+    //     public string Tag { get; set; } = "";
+    // }
+
+    protected override async Task OnInitializedAsync()
     {
-        public int Id { get; set; }
-        public string Title { get; set; } = "";
-        public string Description { get; set; } = "";
-        public string Tag { get; set; } = "";
+        //hämta kategorier från API
+        _categories = (await CategoryApi.GetCategoriesWithSubCategories())
+                .OrderBy(c => c.Id)
+                .ToList();
+        var progress = await ProgressApi.GetSubCategoryProgressAsync();
+            _progressBySubCategoryId = progress.ToDictionary(p => p.SubCategoryId, p => p);
+
+       
     }
-    private List<CategoryDummy> CategoryList= new()
-    {
-        new CategoryDummy { Id = 1, Title = "Matematik", Description = "Grundläggande matteövningar.", Tag = "Unlocked" },
-        new CategoryDummy { Id = 2, Title = "Historia", Description = "Utforska viktiga händelser.", Tag = "Locked" },
-        new CategoryDummy { Id = 3, Title = "Geografi", Description = "Lär dig om världen.", Tag = "Completed" },
-        new CategoryDummy { Id = 4, Title = "Programmering", Description = "Grunder i C#, variabler, loopar.", Tag = "Unlocked" }
-    };
+
+    // private List<CategoryDummy> CategoryList= new()
+    // {
+    //     new CategoryDummy { Id = 1, Title = "Matematik", Description = "Grundläggande matteövningar.", Tag = "Unlocked" },
+    //     new CategoryDummy { Id = 2, Title = "Historia", Description = "Utforska viktiga händelser.", Tag = "Locked" },
+    //     new CategoryDummy { Id = 3, Title = "Geografi", Description = "Lär dig om världen.", Tag = "Completed" },
+    //     new CategoryDummy { Id = 4, Title = "Programmering", Description = "Grunder i C#, variabler, loopar.", Tag = "Unlocked" }
+    // };
 
     private void NavigateTo(int id)
     {
@@ -38,6 +60,31 @@
     }
 
     [Inject] NavigationManager Navigation { get; set; } = default!;
+
+    private bool IsCategoryUnlocked(CategoryDetailModel category)
+    {
+        if (_categories.Count == 0)
+            return false;
+
+        var ordered = _categories.OrderBy(c => c.Id).ToList();
+        if (ordered[0].Id == category.Id)
+            return true;
+
+        var index = ordered.FindIndex(c => c.Id == category.Id);
+        if (index <= 0)
+            return true;
+
+        return IsCategoryCompleted(ordered[index - 1]);
+    }
+
+    private bool IsCategoryCompleted(CategoryDetailModel category)
+    {
+        var subCategoryIds = category.SubCategories.Select(s => s.Id).ToList();
+        if (subCategoryIds.Count == 0)
+            return true;
+
+        return subCategoryIds.All(id => _progressBySubCategoryId.TryGetValue(id, out var progress) && progress.IsPassed);
+    }
 }
 
 

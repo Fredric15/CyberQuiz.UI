@@ -1,167 +1,448 @@
-﻿@page "/questions/{SubCategoryId:int}"
-@using CyberQuiz.UI.Models
-@using CyberQuiz.UI.Services
-@inject QuestionApiClient QuestionApi
-@inject ProgressApiClient ProgressApi
-@inject AuthStateService AuthState
-@inject NavigationManager Nav
+﻿@page "/Questions/{subCategoryId:int}"
+@rendermode InteractiveServer
+@inject QuestionApiClient QuestionApiClient
+@inject CategoryApiClient CategoryApiClient
+@inject ProgressApiClient ProgressApiClient
+@inject AiTutorApiClient AiTutorApiClient
+@inject NavigationManager NavigationManager
 
-<div class="container mt-5">
+<PageTitle>Questions</PageTitle>
 
-    @if (result != null)
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/categories">Categories</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Questions</li>
+    </ol>
+</nav>
+
+<h1>Frågor</h1>
+
+@if (_loading)
+{
+    <p>Laddar...</p>
+}
+else if (_errorMessage is not null)
+{
+    <div class="alert alert-danger">@_errorMessage</div>
+}
+else if (!_isUnlocked)
+{
+    <div class="alert alert-warning">Underkategorin är låst. Genomför den föregående först för att låsa upp denna.</div>
+}
+else if (!_questions.Any())
+{
+    <p>Inga frågor hittades för denna underkategori.</p>
+}
+else
+{
+    @if (!_quizStarted)
     {
-        <!-- RESULTAT-VY -->
-        <div class="card shadow-sm mx-auto text-center" style="max-width: 600px;">
-            <div class="card-body py-5">
-                <h2 class="mb-4">Quiz slutfört!</h2>
-
-                @if (result.Passed)
-                {
-                    <h3 class="text-success mt-3">Godkänd!</h3>
-                }
-                else
-                {
-                    <h3 class="text-danger mt-3">Inte godkänd</h3>
-                }
-
-                <p class="lead mt-4">
-                    Du fick <strong>@result.CorrectAnswers</strong> av <strong>@result.TotalQuestions</strong> rätt.
-                </p>
-
-                <p class="text-muted">@result.Message</p>
-
-                <button class="btn btn-primary mt-4" @onclick="GoHome">
-                    Tillbaka till menyn
-                </button>
-            </div>
-        </div>
-    }
-    else if (quiz == null)
-    {
-        <!-- LADDAR-VY -->
-        <div class="text-center">
-            <div class="spinner-border text-primary" role="status"></div>
-            <p>Laddar quiz...</p>
-        </div>
-    }
-    else if (currentQuestionIndex < quiz.Questions.Count)
-    {
-        <!-- FRÅGE-VY -->
-        var currentQuestion = quiz.Questions[currentQuestionIndex];
-
-        <div class="card shadow-sm mx-auto" style="max-width: 600px;">
-            <div class="card-header bg-primary text-white d-flex justify-content-between">
-                <span>Fråga @(currentQuestionIndex + 1) av @quiz.Questions.Count</span>
-                <span>@quiz.Title</span>
-            </div>
-
+        <div class="card mb-3">
             <div class="card-body">
-                <h4 class="card-title mb-4">@currentQuestion.Text</h4>
-
-                <div class="list-group">
-                    @foreach (var option in currentQuestion.Options)
-                    {
-                        <button type="button"
-                                class="list-group-item list-group-item-action @(GetSelectedClass(option.Id))"
-                                @onclick="() => SelectOption(currentQuestion.Id, option.Id)">
-                            @option.Text
-                        </button>
-                    }
-                </div>
-            </div>
-
-            <div class="card-footer d-flex justify-content-between">
-                <button class="btn btn-secondary"
-                        @onclick="PreviousQuestion"
-                        disabled="@(currentQuestionIndex == 0)">
-                    Föregående
-                </button>
-
-                @if (currentQuestionIndex < quiz.Questions.Count - 1)
-                {
-                    <button class="btn btn-primary"
-                            @onclick="NextQuestion"
-                            disabled="@(!IsCurrentQuestionAnswered())">
-                        Nästa
-                    </button>
-                }
-                else
-                {
-                    <button class="btn btn-success"
-                            @onclick="SubmitQuiz"
-                            disabled="@(!IsAllQuestionsAnswered())">
-                        Slutför Quiz
-                    </button>
-                }
+                <h5 class="card-title">Redo att sätta igång?</h5>
+                <p class="card-text mb-3">Den här quizen har @_questions.Count frågor. Du kommer att få en fråga i taget.</p>
+                <button class="btn btn-primary" @onclick="StartQuiz">Starta quiz</button>
             </div>
         </div>
     }
-</div>
+    else
+    {
+        var question = _questions[_currentQuestionIndex];
+        var questionNumber = _currentQuestionIndex + 1;
+
+        <div class="mb-2 fw-semibold">Fråga @questionNumber av @_questions.Count</div>
+        <div class="card mb-3">
+            <div class="card-header d-flex justify-content-between align-items-start gap-2">
+                <span class="fw-semibold">@question.Text</span>
+                <button class="btn btn-outline-info btn-sm" @onclick="OpenAiPanelAsync" disabled="@_isAiLoading">
+                    @(_isAiLoading ? "Tänker..." : "Fråga AI")
+                </button>
+            </div>
+            <ul class="list-group list-group-flush">
+                @foreach (var answer in question.Options)
+                {
+                    var isSelected = _selectedAnswers.TryGetValue(question.Id, out var selectedId) && selectedId == answer.Id;
+                    <li class="list-group-item">
+                        <label class="d-flex align-items-center gap-2 mb-0">
+                            <input type="radio"
+                                   name="question-@question.Id"
+                                   checked="@isSelected"
+                                   disabled="@(_isSubmitting || _currentAnswerSubmitted)"
+                                   @onchange="() => SelectAnswer(question.Id, answer.Id)" />
+                            <span>@answer.Text</span>
+                        </label>
+                    </li>
+                }
+            </ul>
+        </div>
+
+        @if (_selectedAnswers.ContainsKey(question.Id) && !_currentAnswerSubmitted)
+        {
+            <button class="btn btn-primary" @onclick="SubmitAnswerAsync" disabled="@_isSubmitting">Skicka svar</button>
+        }
+
+        @if (_currentAnswerSubmitted)
+        {
+            <div class="alert @(_currentAnswerIsCorrect == true ? "alert-success" : "alert-danger") mt-3">
+                @(_currentAnswerIsCorrect == true ? "Rätt svar!" : "Fel svar.")
+            </div>
+
+            @if (_currentQuestionIndex < _questions.Count - 1)
+            {
+                <button class="btn btn-primary" @onclick="GoToNextQuestionAsync">Nästa fråga</button>
+            }
+            else
+            {
+                <button class="btn btn-primary" @onclick="BackToCategories">Tillbaka till kategorier</button>
+            }
+        }
+    }
+
+    @if (_submitError is not null)
+    {
+        <div class="alert alert-danger mt-3">@_submitError</div>
+    }
+
+    @if (_submissionResult is not null)
+    {
+        <div class="alert @( _submissionResult.IsPassed ? "alert-success" : "alert-warning") mt-3">
+            Poäng: @_submissionResult.ScorePercentage% - @(_submissionResult.IsPassed ? "Godkänd!" : "Inte tillräckligt för att gå vidare!")
+        </div>
+    }
+
+    <div class="ai-flyout @(_isAiPanelOpen ? "open" : string.Empty)" aria-hidden="@(!_isAiPanelOpen)">
+        <div class="d-flex justify-content-between align-items-center border-bottom p-3">
+            <h5 class="mb-0">AI hjälp</h5>
+            <button class="btn-close" aria-label="Close" @onclick="CloseAiPanel"></button>
+        </div>
+        <div class="p-3 ai-flyout-content">
+            @if (_aiMessages.Count == 0 && !_isAiLoading)
+            {
+                <p class="text-muted mb-0">Öppna AI hjälpen för att få en förklaring på frågan.</p>
+            }
+
+            @foreach (var message in _aiMessages)
+            {
+                <div class="mb-2 ai-message @(message.Role == "assistant" ? "ai-message-assistant" : "ai-message-user")">
+                    @message.Content
+                </div>
+            }
+
+            @if (_isAiLoading)
+            {
+                <div class="d-flex align-items-center gap-2 text-muted mb-2">
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    <span>AI tänker...</span>
+                </div>
+            }
+
+            @if (_aiError is not null)
+            {
+                <div class="alert alert-danger py-2">@_aiError</div>
+            }
+        </div>
+
+        <div class="border-top p-3 d-flex gap-2">
+            <input class="form-control"
+                   placeholder="Ställ en motfråga"
+                   @bind="_aiUserInput"
+                   disabled="@_isAiLoading" />
+            <button class="btn btn-primary" @onclick="SendAiMessageAsync" disabled="@(_isAiLoading || string.IsNullOrWhiteSpace(_aiUserInput))">Skicka</button>
+        </div>
+    </div>
+}
 
 @code {
     [Parameter] public int SubCategoryId { get; set; }
 
-    private QuizDetailsDto? quiz;
-    private QuizResultDto? result;
-
-    private int currentQuestionIndex = 0;
-
-    // QuestionId -> OptionId
-    private Dictionary<int, int> userAnswers = new();
+    private List<CategoryDetailModel> _categories = [];
+    private List<QuestionModel> _questions = [];
+    private Dictionary<int, SubCategoryProgressModel> _progressBySubCategoryId = [];
+    private Dictionary<int, int> _selectedAnswers = [];
+    private bool _loading = true;
+    private string? _errorMessage;
+    private QuizSubmissionResponseModel? _submissionResult;
+    private string? _submitError;
+    private bool _isSubmitting;
+    private bool _isUnlocked = true;
+    private bool _quizStarted;
+    private int _currentQuestionIndex;
+    private bool _currentAnswerSubmitted;
+    private bool? _currentAnswerIsCorrect;
+    private bool _isAiPanelOpen;
+    private bool _isAiLoading;
+    private string? _aiError;
+    private string _aiUserInput = string.Empty;
+    private int? _aiQuestionId;
+    private List<AiChatEntry> _aiMessages = [];
 
     protected override async Task OnInitializedAsync()
     {
-        // Hämtar quiz-data via din QuestionApiClient
-        quiz = await QuestionApi.GetQuizDetailsAsync(SubCategoryId);
-    }
-
-    private void SelectOption(int questionId, int optionId)
-    {
-        userAnswers[questionId] = optionId;
-    }
-
-    private string GetSelectedClass(int optionId)
-        => userAnswers.Values.Contains(optionId) ? "active" : "";
-
-    private bool IsCurrentQuestionAnswered()
-        => quiz != null && userAnswers.ContainsKey(quiz.Questions[currentQuestionIndex].Id);
-
-    private bool IsAllQuestionsAnswered()
-        => quiz != null && userAnswers.Count == quiz.Questions.Count;
-
-    private void NextQuestion() => currentQuestionIndex++;
-    private void PreviousQuestion() => currentQuestionIndex--;
-
-    private async Task SubmitQuiz()
-    {
-        if (quiz == null)
-            return;
-
-        var userName = AuthState.UserName ?? "anonymous";
-
-        var submission = new QuizSubmissionRequestModel
+        try
         {
-            QuizId = quiz.Id,
-            SubCategoryId = SubCategoryId,
-            UserName = userName,
-            Answers = userAnswers
-                .Select(a => new QuizAnswerModel { QuestionId = a.Key, AnswerOptionId = a.Value })
-                .ToList()
-        };
+            _categories = (await CategoryApiClient.GetCategoriesWithSubCategories())
+                .OrderBy(c => c.Id)
+                .ToList();
+            var progress = await ProgressApiClient.GetSubCategoryProgressAsync();
+            _progressBySubCategoryId = progress.ToDictionary(p => p.SubCategoryId, p => p);
 
-        var serverResult = await ProgressApi.SubmitQuizAsync(submission);
-        if (serverResult != null)
-        {
-            result = new QuizResultDto
+            var currentCategory = _categories.FirstOrDefault(c => c.SubCategories.Any(s => s.Id == SubCategoryId));
+            if (currentCategory is null)
             {
-                Passed = serverResult.IsPassed,
-                TotalQuestions = quiz.Questions.Count,
-                CorrectAnswers = (int)Math.Round(serverResult.ScorePercentage / 100.0 * quiz.Questions.Count),
-                Message = serverResult.IsPassed ? "Du klarade quizet." : "Du klarade inte quizet."
-            };
+                _errorMessage = "Subcategory not found.";
+                return;
+            }
+
+            _isUnlocked = IsSubCategoryUnlocked(currentCategory);
+            _questions = (await QuestionApiClient.GetQuestions(SubCategoryId)).ToList();
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = $"Failed to load questions: {ex.Message}";
+        }
+        finally
+        {
+            _loading = false;
         }
     }
 
-    private void GoHome() => Nav.NavigateTo("/home");
+    private void SelectAnswer(int questionId, int answerOptionId)
+    {
+        _selectedAnswers[questionId] = answerOptionId;
+    }
 
+    private async Task SubmitAnswerAsync()
+    {
+        if (_isSubmitting)
+            return;
+
+        var question = _questions[_currentQuestionIndex];
+        if (!_selectedAnswers.TryGetValue(question.Id, out var selectedAnswerId))
+            return;
+
+        _currentAnswerSubmitted = true;
+        _currentAnswerIsCorrect = question.Options.Any(a => a.Id == selectedAnswerId && a.IsCorrect);
+
+        if (_currentAnswerIsCorrect == false)
+        {
+            _isAiPanelOpen = true;
+            var selectedAnswer = question.Options.FirstOrDefault(a => a.Id == selectedAnswerId);
+            await RequestAiHelpAsync(selectedAnswer, selectedAnswerWasWrong: true);
+        }
+
+        if (_currentQuestionIndex == _questions.Count - 1)
+            await SubmitAsync();
+    }
+
+    private async Task GoToNextQuestionAsync()
+    {
+        if (_currentQuestionIndex < _questions.Count - 1)
+        {
+            _currentQuestionIndex++;
+            _currentAnswerSubmitted = false;
+            _currentAnswerIsCorrect = null;
+            ResetAiStateForQuestionChange();
+
+            if (_isAiPanelOpen)
+                await RequestAiHelpAsync();
+        }
+    }
+
+    private void BackToCategories()
+    {
+        NavigationManager.NavigateTo("/categories");
+    }
+
+    private void StartQuiz()
+    {
+        _quizStarted = true;
+        _currentQuestionIndex = 0;
+        _selectedAnswers.Clear();
+        _submitError = null;
+        _submissionResult = null;
+        _currentAnswerSubmitted = false;
+        _currentAnswerIsCorrect = null;
+        _isAiPanelOpen = false;
+        ResetAiStateForQuestionChange();
+    }
+
+    private async Task OpenAiPanelAsync()
+    {
+        _isAiPanelOpen = true;
+        await RequestAiHelpAsync();
+    }
+
+    private void CloseAiPanel()
+    {
+        _isAiPanelOpen = false;
+    }
+
+    private async Task SendAiMessageAsync()
+    {
+        if (string.IsNullOrWhiteSpace(_aiUserInput))
+            return;
+
+        var userMessage = _aiUserInput.Trim();
+        _aiUserInput = string.Empty;
+        _aiMessages.Add(new AiChatEntry("user", userMessage));
+
+        await RequestAiHelpAsync(userPrompt: "Respond to the user's latest question based on the current quiz context.");
+    }
+
+    private async Task RequestAiHelpAsync(
+        AnswerOptionModel? selectedAnswer = null,
+        bool selectedAnswerWasWrong = false,
+        string? userPrompt = null)
+    {
+        if (_questions.Count == 0 || _currentQuestionIndex < 0 || _currentQuestionIndex >= _questions.Count)
+            return;
+
+        var question = _questions[_currentQuestionIndex];
+
+        if (_aiQuestionId != question.Id)
+        {
+            ResetAiStateForQuestionChange();
+            _aiQuestionId = question.Id;
+        }
+
+        _isAiLoading = true;
+        _aiError = null;
+
+        try
+        {
+            var response = await AiTutorApiClient.GetQuestionHelpAsync(
+                question,
+                _aiMessages.Select(m => new AiTutorMessage(m.Role, m.Content)),
+                userPrompt,
+                selectedAnswer,
+                selectedAnswerWasWrong);
+
+            _aiMessages.Add(new AiChatEntry("assistant", response));
+        }
+        catch (Exception ex)
+        {
+            _aiError = $"Failed to get AI response: {ex.Message}";
+        }
+        finally
+        {
+            _isAiLoading = false;
+        }
+    }
+
+    private void ResetAiStateForQuestionChange()
+    {
+        _aiMessages.Clear();
+        _aiError = null;
+        _aiUserInput = string.Empty;
+        _aiQuestionId = null;
+    }
+
+    private async Task SubmitAsync()
+    {
+        if (_isSubmitting)
+            return;
+
+        _isSubmitting = true;
+        _submitError = null;
+        _submissionResult = null;
+
+        try
+        {
+            var request = new QuizSubmissionRequestModel
+            {
+                SubCategoryId = SubCategoryId,
+                Answers = _selectedAnswers
+                    .Select(kvp => new QuizAnswerModel { QuestionId = kvp.Key, AnswerOptionId = kvp.Value })
+                    .ToList()
+            };
+
+            var response = await ProgressApiClient.SubmitQuizAsync(request);
+            if (response is null)
+            {
+                _submitError = "Failed to submit quiz. Please ensure you are logged in.";
+                return;
+            }
+
+            _submissionResult = response;
+        }
+        catch (Exception ex)
+        {
+            _submitError = $"Failed to submit quiz: {ex.Message}";
+        }
+        finally
+        {
+            _isSubmitting = false;
+        }
+    }
+
+    private bool IsSubCategoryUnlocked(CategoryDetailModel category)
+    {
+        var orderedCategories = _categories.OrderBy(c => c.Id).ToList();
+        var categoryIndex = orderedCategories.FindIndex(c => c.Id == category.Id);
+        if (categoryIndex < 0)
+            return false;
+
+        if (categoryIndex > 0 && !IsCategoryCompleted(orderedCategories[categoryIndex - 1]))
+            return false;
+
+        var orderedSubCategories = category.SubCategories.OrderBy(s => s.Id).ToList();
+        var subIndex = orderedSubCategories.FindIndex(s => s.Id == SubCategoryId);
+        if (subIndex <= 0)
+            return true;
+
+        var previousSub = orderedSubCategories[subIndex - 1];
+        return _progressBySubCategoryId.TryGetValue(previousSub.Id, out var progress) && progress.IsPassed;
+    }
+
+    private bool IsCategoryCompleted(CategoryDetailModel category)
+    {
+        var subCategoryIds = category.SubCategories.Select(s => s.Id).ToList();
+        if (subCategoryIds.Count == 0)
+            return true;
+
+        return subCategoryIds.All(id => _progressBySubCategoryId.TryGetValue(id, out var progress) && progress.IsPassed);
+    }
+
+    private sealed record AiChatEntry(string Role, string Content);
 }
+
+<style>
+    .ai-flyout {
+        position: fixed;
+        top: 0;
+        right: 0;
+        height: 100vh;
+        width: min(420px, 92vw);
+        background: #fff;
+        border-right: 1px solid #dee2e6;
+        box-shadow: 0 0 1rem rgba(0, 0, 0, 0.2);
+        transform: translateX(100%);
+        transition: transform 0.2s ease-in-out;
+        z-index: 1100;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .ai-flyout.open {
+            transform: translateX(0);
+        }
+
+    .ai-flyout-content {
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    .ai-message {
+        border-radius: 0.5rem;
+        padding: 0.5rem 0.75rem;
+        white-space: pre-wrap;
+    }
+
+    .ai-message-assistant {
+        background-color: #e9f5ff;
+    }
+
+    .ai-message-user {
+        background-color: #f1f3f5;
+    }
+</style>
