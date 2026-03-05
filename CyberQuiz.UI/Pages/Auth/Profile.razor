@@ -1,73 +1,236 @@
 ﻿@page "/profile"
-@using CyberQuiz.UI.Models
-@using CyberQuiz.UI.Services
-@inject AuthStateService AuthState
-@inject UserApiClient UserApi
-@inject ProgressApiClient ProgressApi
+@rendermode InteractiveServer
+@inject AuthApiClient AuthApiClient
+@inject AuthStateService AuthStateService
+@inject CategoryApiClient CategoryApiClient
+@inject ProgressApiClient ProgressApiClient
+@inject NavigationManager NavigationManager
 
-<h2>Mitt konto</h2>
+<PageTitle>Profile</PageTitle>
 
-@if (Stats == null)
+<h1>Profile</h1>
+
+@if (_loading)
 {
-    <p>Laddar statistik...</p>
+    <p>Loading...</p>
 }
-else
+else if (_errorMessage is not null)
 {
-    <div class="stats-box">
-        <h3>Statistik</h3>
-        <p>Totalt rätt: @Stats.CorrectAnswers</p>
-        <p>Totalt frågor: @Stats.TotalQuestions</p>
-        <p>Procent rätt: @Stats.Percentage %</p>
+    <div class="alert alert-danger">@_errorMessage</div>
+}
+else if (_profile is not null)
+{
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title mb-3">Account</h5>
+            <p class="mb-1"><strong>Username:</strong> @_profile.UserName</p>
+            <p class="mb-2"><strong>Email:</strong> @_profile.Email</p>
+            <p class="mb-1"><strong>General progress:</strong> @_generalProgressPercentage%</p>
+            <div class="progress" role="progressbar" aria-label="General quiz progression" aria-valuenow="@_generalProgressPercentage" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar" style="width: @_generalProgressPercentage%;">@_generalProgressPercentage%</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Change email</h5>
+
+                    <EditForm Model="_emailModel" OnValidSubmit="HandleEmailUpdateAsync" FormName="profile-email">
+                        <DataAnnotationsValidator />
+
+                        <div class="mb-3">
+                            <label for="profile-email" class="form-label">New email</label>
+                            <InputText id="profile-email" class="form-control" @bind-Value="_emailModel.Email" autocomplete="email" />
+                            <ValidationMessage For="() => _emailModel.Email" class="text-danger" />
+                        </div>
+
+                        @if (_emailErrors.Count > 0)
+                        {
+                            <div class="alert alert-danger">
+                                <ul class="mb-0">
+                                    @foreach (var error in _emailErrors)
+                                    {
+                                        <li>@error</li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+
+                        @if (_emailSuccessMessage is not null)
+                        {
+                            <div class="alert alert-success">@_emailSuccessMessage</div>
+                        }
+
+                        <button type="submit" class="btn btn-primary" disabled="@_isUpdatingEmail">Update email</button>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Change password</h5>
+
+                    <EditForm Model="_passwordModel" OnValidSubmit="HandlePasswordChangeAsync" FormName="profile-password">
+                        <DataAnnotationsValidator />
+
+                        <div class="mb-3">
+                            <label for="current-password" class="form-label">Current password</label>
+                            <InputText id="current-password" class="form-control" type="password" @bind-Value="_passwordModel.CurrentPassword" autocomplete="current-password" />
+                            <ValidationMessage For="() => _passwordModel.CurrentPassword" class="text-danger" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="new-password" class="form-label">New password</label>
+                            <InputText id="new-password" class="form-control" type="password" @bind-Value="_passwordModel.NewPassword" autocomplete="new-password" />
+                            <ValidationMessage For="() => _passwordModel.NewPassword" class="text-danger" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="confirm-password" class="form-label">Confirm new password</label>
+                            <InputText id="confirm-password" class="form-control" type="password" @bind-Value="_passwordModel.ConfirmNewPassword" autocomplete="new-password" />
+                            <ValidationMessage For="() => _passwordModel.ConfirmNewPassword" class="text-danger" />
+                        </div>
+
+                        @if (_passwordErrors.Count > 0)
+                        {
+                            <div class="alert alert-danger">
+                                <ul class="mb-0">
+                                    @foreach (var error in _passwordErrors)
+                                    {
+                                        <li>@error</li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+
+                        @if (_passwordSuccessMessage is not null)
+                        {
+                            <div class="alert alert-success">@_passwordSuccessMessage</div>
+                        }
+
+                        <button type="submit" class="btn btn-primary" disabled="@_isChangingPassword">Update password</button>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
     </div>
 }
 
-<hr />
-
-<h3>Byt användarnamn</h3>
-<input @bind="NewUserName" placeholder="Nytt användarnamn" />
-<button @onclick="ChangeUserName">Spara</button>
-
-@if (!string.IsNullOrEmpty(UserNameMessage))
-{
-    <p>@UserNameMessage</p>
-}
-
-<hr />
-
-<h3>Byt lösenord</h3>
-<input type="password" @bind="CurrentPassword" placeholder="Nuvarande lösenord" />
-<input type="password" @bind="NewPassword" placeholder="Nytt lösenord" />
-<button @onclick="ChangePassword">Byt lösenord</button>
-
-@if (!string.IsNullOrEmpty(PasswordMessage))
-{
-    <p>@PasswordMessage</p>
-}
-
 @code {
-    private UserStatsModel? Stats;
-
-    private string NewUserName = "";
-    private string UserNameMessage = "";
-
-    private string CurrentPassword = "";
-    private string NewPassword = "";
-    private string PasswordMessage = "";
+    private UserProfileModel? _profile;
+    private readonly UpdateEmailModel _emailModel = new();
+    private ChangePasswordModel _passwordModel = new();
+    private bool _loading = true;
+    private string? _errorMessage;
+    private List<string> _emailErrors = [];
+    private List<string> _passwordErrors = [];
+    private bool _isUpdatingEmail;
+    private bool _isChangingPassword;
+    private string? _emailSuccessMessage;
+    private string? _passwordSuccessMessage;
+    private double _generalProgressPercentage;
 
     protected override async Task OnInitializedAsync()
     {
-        Stats = await UserApi.GetUserStatsAsync();
+        if (!AuthStateService.IsAuthenticated)
+        {
+            NavigationManager.NavigateTo("/login");
+            return;
+        }
+
+        await LoadProfileAsync();
     }
 
-    private async Task ChangeUserName()
+    private async Task LoadProfileAsync()
     {
-        var ok = await UserApi.ChangeUserNameAsync(NewUserName);
-        UserNameMessage = ok ? "Användarnamn uppdaterat!" : "Kunde inte uppdatera användarnamn.";
+        _loading = true;
+        _errorMessage = null;
+
+        try
+        {
+            var (success, profile, errors) = await AuthApiClient.GetProfileAsync();
+            if (!success || profile is null)
+            {
+                _errorMessage = errors.FirstOrDefault() ?? "Failed to load profile.";
+                return;
+            }
+
+            _profile = profile;
+            _emailModel.Email = profile.Email;
+            await LoadGeneralProgressAsync();
+        }
+        finally
+        {
+            _loading = false;
+        }
     }
 
-    private async Task ChangePassword()
+    private async Task LoadGeneralProgressAsync()
     {
-        var ok = await UserApi.ChangePasswordAsync(CurrentPassword, NewPassword);
-        PasswordMessage = ok ? "Lösenord uppdaterat!" : "Kunde inte uppdatera lösenord.";
+        var categories = (await CategoryApiClient.GetCategoriesWithSubCategories()).ToList();
+        var totalSubCategories = categories.SelectMany(c => c.SubCategories).Count();
+        if (totalSubCategories == 0)
+        {
+            _generalProgressPercentage = 0;
+            return;
+        }
+
+        var progress = (await ProgressApiClient.GetSubCategoryProgressAsync()).ToList();
+        var passedCount = progress.Count(p => p.IsPassed);
+        _generalProgressPercentage = Math.Round((double)passedCount / totalSubCategories * 100, 2);
+    }
+
+    private async Task HandleEmailUpdateAsync()
+    {
+        _isUpdatingEmail = true;
+        _emailErrors = [];
+        _emailSuccessMessage = null;
+
+        try
+        {
+            var (success, profile, errors) = await AuthApiClient.UpdateEmailAsync(_emailModel.Email);
+            if (!success || profile is null)
+            {
+                _emailErrors = errors.ToList();
+                return;
+            }
+
+            _profile = profile;
+            AuthStateService.UpdateProfile(profile.Email, profile.UserName);
+            _emailSuccessMessage = "Email updated successfully.";
+        }
+        finally
+        {
+            _isUpdatingEmail = false;
+        }
+    }
+
+    private async Task HandlePasswordChangeAsync()
+    {
+        _isChangingPassword = true;
+        _passwordErrors = [];
+        _passwordSuccessMessage = null;
+
+        try
+        {
+            var (success, errors) = await AuthApiClient.ChangePasswordAsync(_passwordModel.CurrentPassword, _passwordModel.NewPassword);
+            if (!success)
+            {
+                _passwordErrors = errors.ToList();
+                return;
+            }
+
+            _passwordModel = new ChangePasswordModel();
+            _passwordSuccessMessage = "Password updated successfully.";
+        }
+        finally
+        {
+            _isChangingPassword = false;
+        }
     }
 }
