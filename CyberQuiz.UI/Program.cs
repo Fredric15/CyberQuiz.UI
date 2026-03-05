@@ -32,6 +32,12 @@ builder.Services.AddHttpClient<ProgressApiClient>(client =>
     client.BaseAddress = new Uri(apiBaseUrl);
 });
 
+builder.Services.AddHttpClient<AiTutorApiClient>(client =>
+{
+    var ollamaBaseUrl = builder.Configuration["Ollama:BaseUrl"] ?? "http://localhost:11434/api/";
+    client.BaseAddress = new Uri(ollamaBaseUrl);
+}); 
+
 
 // ---------------------------------------------------------
 // 2. Registrera AuthStateService (global auth‑state)
