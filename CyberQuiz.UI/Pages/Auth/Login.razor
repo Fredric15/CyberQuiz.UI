@@ -6,33 +6,43 @@
 @inject AuthStateService AuthState // Håller koll på vem som är inloggad
 @inject NavigationManager Nav
 
-<h3>Logga in</h3>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-5">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h3 class="mb-4 text-center">Logga in</h3>
 
-@if (!string.IsNullOrEmpty(ErrorMessage))
-{
-    <p style="color:red">@ErrorMessage</p>
-}
+                    @if (!string.IsNullOrEmpty(ErrorMessage))
+                    {
+                        <div class="alert alert-danger" role="alert">@ErrorMessage</div>
+                    }
 
-<EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
-    <DataAnnotationsValidator />
+                    <EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
+                        <DataAnnotationsValidator />
 
-    <div>
-        <label>Email</label><br />
-        <InputText @bind-Value="loginModel.Email" />
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <InputText @bind-Value="loginModel.Email" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Lösenord</label>
+                            <InputText @bind-Value="loginModel.Password" type="password" class="form-control" />
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">Logga in</button>
+                    </EditForm>
+
+                    <p class="mt-3 mb-0 text-center">
+                        Har du inget konto?
+                        <NavLink href="/register" class="ms-1">Registrera dig</NavLink>
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div style="margin-top:10px">
-        <label>Lösenord</label><br />
-        <InputText @bind-Value="loginModel.Password" type="password" />
-    </div>
-
-    <button type="submit" style="margin-top:15px">Logga in</button>
-</EditForm>
-
-<p style="margin-top:15px">
-    Har du inget konto?
-    <NavLink href="/register">Registrera dig</NavLink>
-</p>
+</div>
 
 @code {
     private LoginModel loginModel = new();

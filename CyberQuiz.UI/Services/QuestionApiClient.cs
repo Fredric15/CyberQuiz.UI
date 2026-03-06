@@ -18,9 +18,9 @@ public class QuestionApiClient
             ?? Enumerable.Empty<QuestionModel>();
     }
 
-    public async Task<QuizDetailsDto?> GetQuizDetailsAsync(int subCategoryId)
-    {
-        // Endpoint expected to return a quiz DTO with questions and options
-        return await _httpClient.GetFromJsonAsync<QuizDetailsDto>($"api/subcategories/{subCategoryId}/quiz");
-    }
+    //public async Task<QuizDetailsDto?> GetQuizDetailsAsync(int subCategoryId)
+    //{
+    //    // Endpoint expected to return a quiz DTO with questions and options
+    //    return await _httpClient.GetFromJsonAsync<QuizDetailsDto>($"api/subcategories/{subCategoryId}/quiz");
+    //}
 }

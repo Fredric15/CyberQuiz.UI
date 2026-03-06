@@ -1,18 +1,24 @@
 ﻿@page "/categories/{CategoryId:int}"
+@using CyberQuiz.UI.Components.Shared
 @using CyberQuiz.UI.Models
 @using CyberQuiz.UI.Services
 @inject CategoryApiClient CategoryApi
+@inject ProgressApiClient ProgressApi
 @inject NavigationManager Navigation
 
 <h1 class="mb-4">Välj delkategori</h1>
 
 <div class="row g-4">
-    @foreach (var sc in SubCategoriesList)
+    @foreach (var sc in _subCategories)
     {
+        var isUnlocked = IsSubCategoryUnlocked(sc);
+        var isCompleted = IsSubCategoryCompleted(sc);
+
         <div class="col-12 col-sm-6 col-md-4 col-lg-3">
             <QuizCard Title="@sc.Title"
                       Description="@sc.Description"
-                      Tag="@sc.Tag"
+                      Unlocked="isUnlocked"
+                      Completed="isCompleted"
                       OnClick="() => NavigateTo(sc.Id)" />
         </div>
 		//skickar in datan från API:et och navigerar till rätt
@@ -22,17 +28,84 @@
 @code {
     [Parameter] public int CategoryId { get; set; }
 
-    private List<SubCategoryModel> SubCategoriesList = new();
+   
+    private List<CategoryDetailModel> _categories = [];
+    private List<SubCategoryModel> _subCategories = [];
+    private Dictionary<int, SubCategoryProgressModel> _progressBySubCategoryId = [];
+    private bool _loading = true;
+    private string? _errorMessage;
+    private bool _categoryUnlocked = true;
 
     protected override async Task OnInitializedAsync()
     {
         //hämta subkategorier från API
-        var result = await CategoryApi.GetSubCategoriesAsync(CategoryId);
-        SubCategoriesList = result.ToList();
+        _categories = (await CategoryApi.GetCategoriesWithSubCategories())
+               .OrderBy(c => c.Id)
+               .ToList();
+        var progress = await ProgressApi.GetSubCategoryProgressAsync();
+        _progressBySubCategoryId = progress.ToDictionary(p => p.SubCategoryId, p => p);
+
+        var currentCategory = _categories.FirstOrDefault(c => c.Id == CategoryId);
+        if (currentCategory is null)
+        {
+            _errorMessage = "Category not found.";
+            return;
+        }
+
+        _categoryUnlocked = IsCategoryUnlocked(currentCategory);
+        _subCategories = currentCategory.SubCategories
+            .OrderBy(s => s.Id)
+            .ToList();
     }
 
     private void NavigateTo(int subCategoryId)
     {
         Navigation.NavigateTo($"/questions/{subCategoryId}");
+    }
+
+    private bool IsCategoryUnlocked(CategoryDetailModel category)
+    {
+        if (_categories.Count == 0)
+            return false;
+
+        var ordered = _categories.OrderBy(c => c.Id).ToList();
+        if (ordered[0].Id == category.Id)
+            return true;
+
+        var index = ordered.FindIndex(c => c.Id == category.Id);
+        if (index <= 0)
+            return true;
+
+        return IsCategoryCompleted(ordered[index - 1]);
+    }
+
+    private bool IsCategoryCompleted(CategoryDetailModel category)
+    {
+        var subCategoryIds = category.SubCategories.Select(s => s.Id).ToList();
+        if (subCategoryIds.Count == 0)
+            return true;
+
+        return subCategoryIds.All(id => _progressBySubCategoryId.TryGetValue(id, out var progress) && progress.IsPassed);
+    }
+
+    private bool IsSubCategoryUnlocked(SubCategoryModel subCategory)
+    {
+        if (!_categoryUnlocked || _subCategories.Count == 0)
+            return false;
+
+        var ordered = _subCategories.OrderBy(s => s.Id).ToList();
+        if (ordered[0].Id == subCategory.Id)
+            return true;
+
+        var index = ordered.FindIndex(s => s.Id == subCategory.Id);
+        if (index <= 0)
+            return true;
+
+        return _progressBySubCategoryId.TryGetValue(ordered[index - 1].Id, out var progress) && progress.IsPassed;
+    }
+
+    private bool IsSubCategoryCompleted(SubCategoryModel subCategory)
+    {
+        return _progressBySubCategoryId.TryGetValue(subCategory.Id, out var progress) && progress.IsPassed;
     }
 }

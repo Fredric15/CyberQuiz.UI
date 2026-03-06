@@ -24,7 +24,7 @@ namespace CyberQuiz.UI.Services
             bool selectedAnswerWasWrong = false,
             CancellationToken cancellationToken = default)
         {
-            var optionLines = question.AnswerOptions
+            var optionLines = question.Options
                 .Select((option, index) => $"{index + 1}. {option.Text}")
                 .ToArray();
 
