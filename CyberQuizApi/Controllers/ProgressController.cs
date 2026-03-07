@@ -1,4 +1,5 @@
 ﻿using CyberQuiz.BLL.Models;
+using CyberQuiz.BLL.Models.DTO;
 using CyberQuiz.BLL.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;

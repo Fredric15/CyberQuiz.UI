@@ -1,4 +1,5 @@
-﻿using CyberQuiz.BLL.Services.Interfaces;
+﻿using CyberQuiz.BLL.Models.DTO;
+using CyberQuiz.BLL.Services.Interfaces;
 using CyberQuiz.DAL.Models;
 using CyberQuiz.DAL.Repositories.Interfaces;
 using System;
@@ -17,7 +18,7 @@ namespace CyberQuiz.BLL.Services
             _quizRepository = quizRepository;
         }
 
-        public async Task<IEnumerable<QuestionModel>> GetQuestionsBySubCategoryId(int subCategoryId)
+        public async Task<IEnumerable<QuestionDTOModel>> GetQuestionsBySubCategoryId(int subCategoryId)
         {
             var subCategory = await _quizRepository.GetCompleteQuizByIdAsync(subCategoryId);
             if (subCategory is null)
@@ -25,7 +26,21 @@ namespace CyberQuiz.BLL.Services
                 return [];
             }
 
-            return subCategory.Quizzes.SelectMany(q => q.Questions).ToList();
+            var questions = subCategory.Quizzes.SelectMany(q => q.Questions).ToList();
+            // Map the questions to QuestionDTOModel
+            var questionDTOs = questions.Select(q => new QuestionDTOModel
+            {
+                Id = q.Id,
+                Text = q.Text,
+                Options = q.Options.Select(o => new OptionDTOModel
+                {
+                    Id = o.Id,
+                    Text = o.Text,
+                    IsCorrect = o.IsCorrect
+                }).ToList()
+               
+            }).ToList();
+            return questionDTOs;
         }
     }
 }

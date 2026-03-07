@@ -1,4 +1,5 @@
-﻿using CyberQuiz.BLL.Services.Interfaces;
+﻿using CyberQuiz.BLL.Models.DTO;
+using CyberQuiz.BLL.Services.Interfaces;
 using CyberQuiz.DAL.Models;
 using CyberQuiz.DAL.Repositories.Interfaces;
 using System;
@@ -17,10 +18,12 @@ namespace CyberQuiz.BLL.Services
             _quizRepository = quizRepository;
         }
 
-        public async Task<IEnumerable<CategoryModel>> GetCategories()
+        public async Task<IEnumerable<CategoryDTOModel>> GetCategories()
         {
             var categories = await _quizRepository.GetAllCategoriesWithSubCAsync();
-            return categories.Select(c => new CategoryModel
+
+            // Map to DTO 
+            return categories.Select(c => new CategoryDTOModel
             {
                 Id = c.Id,
                 Name = c.Name,
@@ -28,15 +31,44 @@ namespace CyberQuiz.BLL.Services
             }).ToList();
         }
 
-        public async Task<IEnumerable<SubCategoryModel>> GetSubCategoriesByCategoryId(int categoryId)
+        public async Task<IEnumerable<SubCategoryDTOModel>> GetSubCategoriesByCategoryId(int categoryId)
         {
             var categories = await _quizRepository.GetAllCategoriesWithSubCAsync();
-            return categories.FirstOrDefault(c => c.Id == categoryId)?.SubCategories ?? [];
+
+            var subCategory = categories.FirstOrDefault(c => c.Id == categoryId)?.SubCategories ?? [];
+
+            // Map to DTO
+            return subCategory.Select(sc => new SubCategoryDTOModel
+            {
+                Id = sc.Id,
+                Name = sc.Name,
+                Description = sc.Description,
+                Order = sc.Order,
+                UnlockThresholdPercentage = sc.UnlockThresholdPercentage,
+                CategoryModelId = sc.CategoryModelId
+            }).ToList();
         }
 
-        public async Task<IEnumerable<CategoryModel>> GetCategoriesWithSubCategories()
+        public async Task<IEnumerable<CategoryWithSubCategoriesDTOModel>> GetCategoriesWithSubCategories()
         {
-            return await _quizRepository.GetAllCategoriesWithSubCAsync();
+            var subCategories = await _quizRepository.GetAllCategoriesWithSubCAsync();
+
+            // Map to DTO
+            return subCategories.Select(c => new CategoryWithSubCategoriesDTOModel
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Description = c.Description,
+                SubCategories = c.SubCategories.Select(sc => new SubCategoryDTOModel
+                {
+                    Id = sc.Id,
+                    Name = sc.Name,
+                    Description = sc.Description,
+                    Order = sc.Order,
+                    UnlockThresholdPercentage = sc.UnlockThresholdPercentage,
+                    CategoryModelId = sc.CategoryModelId
+                }).ToList()
+            }).ToList();
         }
     }
 
