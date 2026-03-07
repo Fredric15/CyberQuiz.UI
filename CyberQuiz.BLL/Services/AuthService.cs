@@ -1,13 +1,6 @@
 ﻿using CyberQuiz.BLL.Services.Interfaces;
 using CyberQuiz.DAL.Models;
 using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Security.Principal;
-using System.Text;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Model;
-using static System.Net.WebRequestMethods;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CyberQuiz.BLL.Services
 {

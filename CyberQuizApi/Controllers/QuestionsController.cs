@@ -1,4 +1,5 @@
-﻿using CyberQuiz.BLL.Services.Interfaces;
+﻿using CyberQuiz.BLL.Models.DTO;
+using CyberQuiz.BLL.Services.Interfaces;
 using CyberQuiz.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +17,7 @@ namespace CyberQuizApi.Controllers
         }
 
         [HttpGet("{subCategoryId}/questions")]
-        public async Task<ActionResult<IEnumerable<QuestionModel>>> GetQuestions(int subCategoryId)
+        public async Task<ActionResult<IEnumerable<QuestionDTOModel>>> GetQuestions(int subCategoryId)
         {
             var questions = await _questionService.GetQuestionsBySubCategoryId(subCategoryId);
             return Ok(questions);

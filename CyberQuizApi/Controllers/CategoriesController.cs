@@ -1,4 +1,5 @@
-﻿using CyberQuiz.BLL.Services.Interfaces;
+﻿using CyberQuiz.BLL.Models.DTO;
+using CyberQuiz.BLL.Services.Interfaces;
 using CyberQuiz.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,21 +17,21 @@ namespace CyberQuizApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CategoryModel>>> GetCategories()
+        public async Task<ActionResult<IEnumerable<CategoryDTOModel>>> GetCategories()
         {
             var categories = await _categoryService.GetCategories();
             return Ok(categories);
         }
 
         [HttpGet("with-subcategories")]
-        public async Task<ActionResult<IEnumerable<CategoryModel>>> GetCategoriesWithSubCategories()
+        public async Task<ActionResult<IEnumerable<CategoryWithSubCategoriesDTOModel>>> GetCategoriesWithSubCategories()
         {
             var categories = await _categoryService.GetCategoriesWithSubCategories();
             return Ok(categories);
         }
 
         [HttpGet("{categoryId}/subcategories")]
-        public async Task<ActionResult<IEnumerable<SubCategoryModel>>> GetSubCategories(int categoryId)
+        public async Task<ActionResult<IEnumerable<SubCategoryDTOModel>>> GetSubCategories(int categoryId)
         {
             var subCategories = await _categoryService.GetSubCategoriesByCategoryId(categoryId);
             return Ok(subCategories);
