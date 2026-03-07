@@ -42,5 +42,25 @@ namespace CyberQuiz.DAL.Repositories
             return await _context.SubCategories
                 .FirstOrDefaultAsync(sc => sc.Id == subCategoryId);
         }
+
+        public async Task<int?> GetNextSubCategoryIdAsync(int currentSubCategoryId)
+        {
+            // 1. Först måste vi hitta den nuvarande underkategorin för att veta vilken Huvudkategori den tillhör
+            var currentSubCategory = await _context.SubCategories
+                .FirstOrDefaultAsync(sc => sc.Id == currentSubCategoryId);
+
+            if (currentSubCategory == null)
+            {
+                return null; // Hittades inte
+            }
+
+            // 2. Leta upp nästa underkategori i samma huvudkategori (den som har ett högre ID)
+            var nextSubCategory = await _context.SubCategories
+                .Where(sc => sc.CategoryModelId == currentSubCategory.CategoryModelId && sc.Order > currentSubCategory.Order)
+                .OrderBy(sc => sc.Order) // Sortera så vi garanterat får den som ligger precis efter
+                .FirstOrDefaultAsync();
+
+            return nextSubCategory?.Id;
+        }
     }
 }

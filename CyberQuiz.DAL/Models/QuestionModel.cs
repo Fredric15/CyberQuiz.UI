@@ -11,7 +11,6 @@ namespace CyberQuiz.DAL.Models
         public string Text { get; set; }
         public List<OptionModel> Options { get; set; } = new();
         public int QuizModelId { get; set; } // Foreign key till QuizModel
-        [JsonIgnore]
         public QuizModel? Quiz { get; set; }
     }
 }
