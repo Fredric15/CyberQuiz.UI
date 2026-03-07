@@ -34,6 +34,13 @@ namespace CyberQuiz.DAL.Repositories
                 .ToListAsync();
         }
 
+        public async Task<UserProgressModel?> GetProgressAsync(string userId, int subCategoryId)
+        {
+            // Letar upp en specifik rad där både UserId och SubCategoryId matchar
+            return await _context.UserProgress
+                .FirstOrDefaultAsync(up => up.ApplicationUserId == userId && up.SubCategoryModelId == subCategoryId);
+        }
+
         public async Task UpdateProgressAsync(UserProgressModel userProgress)
         {
             //Uppdaterar ett befintligt UserProgress-objekt i databasen.
