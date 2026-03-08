@@ -1,73 +1,82 @@
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+
 namespace CyberQuiz.UI.Services;
 
-public class AuthStateService
+public class CustomAuthStateProvider : AuthenticationStateProvider
 {
-    public string? Token { get; private set; }
-    public string? UserName { get; private set; }
-    public string? Email { get; private set; }
-    public bool IsAuthenticated => !string.IsNullOrWhiteSpace(Token) && !IsTokenExpired(Token);
+    //Alternativ 1:
+    //ProtectedSessionStorage sparar Jwt-token i session-minnet,
+    //Vilket innebär att den raderas när webbläsaren eller fliken stängs
+    private readonly ProtectedSessionStorage _sessionStorage;
 
-    public event Action? OnChange;
+    //Alternativ 2: Spara token i localStorage (ProtectedLocalStorage)
+    //ProtectedLocalStorage sparar i localStorage,
+    //vilket innebär att den finns kvar även efter att webbläsaren eller fliken stängs
 
-    public void SetUser(string token, string email, string userName)
+    public CustomAuthStateProvider(ProtectedSessionStorage sessionStorage)
     {
-        if (IsTokenExpired(token))
-        {
-            ClearUser();
-            return;
-        }
-
-        Token = token;
-        Email = email;
-        UserName = userName;
-        OnChange?.Invoke();
+        _sessionStorage = sessionStorage;
     }
 
-    public void ClearUser()
-    {
-        Token = null;
-        Email = null;
-        UserName = null;
-        OnChange?.Invoke();
-    }
-
-    public void UpdateProfile(string email, string userName)
-    {
-        if (!IsAuthenticated)
-            return;
-
-        Email = email;
-        UserName = userName;
-        OnChange?.Invoke();
-    }
-
-    private static bool IsTokenExpired(string token)
+    public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
         try
         {
-            var parts = token.Split('.');
-            if (parts.Length < 2)
-                return true;
+            // Försök hämta token-strängen från session-minnet
+            var tokenResult = await _sessionStorage.GetAsync<string>("authToken");
+            var token = tokenResult.Success ? tokenResult.Value : null;
 
-            var payload = parts[1]
-                .Replace('-', '+')
-                .Replace('_', '/');
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
+            }
 
-            if (payload.Length % 4 != 0)
-                payload = payload.PadRight(payload.Length + (4 - payload.Length % 4), '=');
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadJwtToken(token);
 
-            var payloadJson = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(payload));
-            using var document = System.Text.Json.JsonDocument.Parse(payloadJson);
+            // Kolla om token har gått ut och i så fall radera den från session-minnet
+            if (jwtToken.ValidTo < DateTime.UtcNow)
+            {
+                await _sessionStorage.DeleteAsync("authToken");
+                return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
+            }
 
-            if (!document.RootElement.TryGetProperty("exp", out var expElement))
-                return false;
+            var identity = new ClaimsIdentity(jwtToken.Claims, "jwtAuthType");
+            var user = new ClaimsPrincipal(identity);
 
-            var expiresAt = DateTimeOffset.FromUnixTimeSeconds(expElement.GetInt64());
-            return expiresAt <= DateTimeOffset.UtcNow;
+            return new AuthenticationState(user);
         }
         catch
         {
-            return true;
+            // Fångar upp prerendering-kraschar
+            return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
         }
     }
+
+    public async Task MarkUserAsAuthenticated(string token)
+    {
+        //Denna metoden anropas av FrontendAuthService när inloggningen lyckas,
+        //Och sparar token-strängen i session-minnet
+        await _sessionStorage.SetAsync("authToken", token); // Spara
+
+        var handler = new JwtSecurityTokenHandler();
+        var jwtToken = handler.ReadJwtToken(token);
+        var identity = new ClaimsIdentity(jwtToken.Claims, "jwtAuthType");
+        var user = new ClaimsPrincipal(identity);
+
+        NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(user)));
+    }
+
+    public async Task MarkUserAsLoggedOut()
+    {
+        // Denna metoden anropas av i AuthApiClient när användaren loggar ut
+        await _sessionStorage.DeleteAsync("authToken"); // Radera
+        var anonymous = new ClaimsPrincipal(new ClaimsIdentity());
+
+        NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(anonymous)));
+    }
 }
+

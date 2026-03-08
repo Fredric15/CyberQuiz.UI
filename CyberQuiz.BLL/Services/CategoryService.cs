@@ -21,6 +21,7 @@ namespace CyberQuiz.BLL.Services
         public async Task<IEnumerable<CategoryDTOModel>> GetCategories()
         {
             var categories = await _quizRepository.GetAllCategoriesWithSubCAsync();
+            
 
             // Map to DTO 
             return categories.Select(c => new CategoryDTOModel

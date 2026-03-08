@@ -1,5 +1,7 @@
-﻿using CyberQuiz.UI.Services;
+﻿using CyberQuiz.UI;
+using CyberQuiz.UI.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,8 +12,13 @@ var apiBaseUrl = builder.Configuration["ApiBaseUrl"]
 
 
 // ---------------------------------------------------------
-// 1. Registrera HttpClient för varje API‑service
+// Registrera HttpClient för varje API‑service
 // ---------------------------------------------------------
+builder.Services.AddHttpClient<UserApiClient>(client =>
+{
+    client.BaseAddress = new Uri(apiBaseUrl);
+});
+
 builder.Services.AddHttpClient<CategoryApiClient>(client =>
 {
     client.BaseAddress = new Uri(apiBaseUrl);
@@ -36,20 +43,21 @@ builder.Services.AddHttpClient<AiTutorApiClient>(client =>
 {
     var ollamaBaseUrl = builder.Configuration["Ollama:BaseUrl"] ?? "http://localhost:11434/api/";
     client.BaseAddress = new Uri(ollamaBaseUrl);
-}); 
+});
 
 
 // ---------------------------------------------------------
-// 2. Registrera AuthStateService (global auth‑state)
-// ---------------------------------------------------------
-builder.Services.AddScoped<AuthStateService>();
+// Registrera AuthStateService (global auth‑state)
+
+builder.Services.AddCascadingAuthenticationState();
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 
 
 // ---------------------------------------------------------
 // 3. Blazor Server
 // ---------------------------------------------------------
-builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
 
 var app = builder.Build();
 
@@ -59,8 +67,9 @@ var app = builder.Build();
 // ---------------------------------------------------------
 app.UseStaticFiles();
 app.UseRouting();
+app.UseAntiforgery();
 
-app.MapBlazorHub();
-app.MapFallbackToPage("/_Host");
+app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode();
 
 app.Run();

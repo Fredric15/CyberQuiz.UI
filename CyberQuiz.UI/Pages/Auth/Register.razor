@@ -1,8 +1,10 @@
 ﻿@page "/register"
 @using CyberQuiz.UI.Services
+@using Microsoft.AspNetCore.Components.Authorization
 @inject AuthApiClient AuthApi
-@inject AuthStateService AuthState
+@inject AuthenticationStateProvider AuthProvider
 @inject NavigationManager Nav
+@rendermode InteractiveServer
 
 <div class="auth-wrapper">
     <div class="auth-panel">
@@ -79,7 +81,8 @@
         }
 
         // Spara användaren i AuthStateService
-        AuthState.SetUser(response.Result!.Token, response.Result.Email, response.Result.UserName);
+        var customProvider = (CustomAuthStateProvider)AuthProvider;
+        await customProvider.MarkUserAsAuthenticated(response.Result!.Token);
 
         // Navigera vidare
         Nav.NavigateTo("/", true);
