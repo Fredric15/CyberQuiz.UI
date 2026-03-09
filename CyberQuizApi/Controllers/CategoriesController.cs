@@ -11,11 +11,15 @@ namespace CyberQuizApi.Controllers
     {
         private readonly ICategoryService _categoryService;
 
+       
+        //Initializes the controller used to serve category endpoints.      
         public CategoriesController(ICategoryService categoryService)
         {
             _categoryService = categoryService;
         }
 
+       
+        // Returns all available quiz categories.     
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CategoryDTOModel>>> GetCategories()
         {
@@ -23,6 +27,8 @@ namespace CyberQuizApi.Controllers
             return Ok(categories);
         }
 
+        
+        // Returns categories with nested subcategories in one response.
         [HttpGet("with-subcategories")]
         public async Task<ActionResult<IEnumerable<CategoryWithSubCategoriesDTOModel>>> GetCategoriesWithSubCategories()
         {
@@ -30,6 +36,8 @@ namespace CyberQuizApi.Controllers
             return Ok(categories);
         }
 
+       
+        // Returns subcategories for the requested category id.     
         [HttpGet("{categoryId}/subcategories")]
         public async Task<ActionResult<IEnumerable<SubCategoryDTOModel>>> GetSubCategories(int categoryId)
         {

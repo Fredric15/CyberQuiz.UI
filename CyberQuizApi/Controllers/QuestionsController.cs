@@ -11,11 +11,15 @@ namespace CyberQuizApi.Controllers
     {
         private readonly IQuestionService _questionService;
 
+        
+        // Initializes the controller used to serve question endpoints.   
         public QuestionsController(IQuestionService questionService)
         {
             _questionService = questionService;
         }
 
+       
+        // Returns all questions for a selected subcategory.        
         [HttpGet("{subCategoryId}/questions")]
         public async Task<ActionResult<IEnumerable<QuestionDTOModel>>> GetQuestions(int subCategoryId)
         {
