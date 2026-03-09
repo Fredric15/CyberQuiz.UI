@@ -59,6 +59,9 @@ builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddAuthentication("Cookies").AddCookie();
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
 
@@ -67,6 +70,9 @@ var app = builder.Build();
 // ---------------------------------------------------------
 app.UseStaticFiles();
 app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseAntiforgery();
 
 app.MapRazorComponents<App>()

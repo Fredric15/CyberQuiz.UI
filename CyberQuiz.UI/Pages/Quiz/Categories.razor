@@ -2,6 +2,7 @@
 @using CyberQuiz.UI.Components.Shared
 @inject CategoryApiClient CategoryApi
 @inject ProgressApiClient ProgressApi
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <h1 class="mb-4">Välj kategori</h1>
 

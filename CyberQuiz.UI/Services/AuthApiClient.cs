@@ -50,7 +50,7 @@ public class AuthApiClient
 
     public async Task LogOutAsync()
     {
-        // Radera token-strängen i ProtectedSessionStorage
+        // Radera token-strängen och bli unauthorizead/utloggad
         var customProvider = (CustomAuthStateProvider)_authStateProvider;
         await customProvider.MarkUserAsLoggedOut();
     }

@@ -123,11 +123,27 @@ public class ProgressApiClient
 
     private async Task SetAuthHeaderAsync()
     {
-        var result = await _sessionStorage.GetAsync<string>("authToken");
-        if (result.Success && !string.IsNullOrEmpty(result.Value))
+        //var result = await _sessionStorage.GetAsync<string>("authToken");
+        //if (result.Success && !string.IsNullOrEmpty(result.Value))
+        //{
+        //    _httpClient.DefaultRequestHeaders.Authorization =
+        //        new AuthenticationHeaderValue("Bearer", result.Value);
+        //}
+
+        try
         {
-            _httpClient.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", result.Value);
+            var result = await _sessionStorage.GetAsync<string>("authToken");
+            if (result.Success && !string.IsNullOrEmpty(result.Value))
+            {
+                _httpClient.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", result.Value);
+            }
+        }
+        catch (InvalidOperationException)
+        {
+            // Det här fångar upp kraschen!
+            // Ignorera felet. Detta händer när Blazor för-renderar sidan på servern
+            // och JavaScript (sessionStorage) inte är tillgängligt ännu.
         }
     }
 }
