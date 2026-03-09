@@ -193,8 +193,21 @@ else
                 return;
             }
 
+
             _isUnlocked = IsSubCategoryUnlocked(currentCategory);
-            _questions = (await QuestionApiClient.GetQuestions(SubCategoryId)).ToList();
+            _questions = (await QuestionApiClient.GetQuestions(SubCategoryId))
+            .OrderBy(q => Guid.NewGuid())
+            .ToList();
+			//Randomiserar ordningen på frågorna
+
+            foreach (var question in _questions)
+            {
+                question.Options = question.Options.OrderBy(o => Guid.NewGuid()).ToList();
+			}
+			; // Randomiserar svarsalternativen för varje fråga
+
+
+            
         }
         catch (Exception ex)
         {
