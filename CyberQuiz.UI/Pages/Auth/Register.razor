@@ -1,45 +1,45 @@
 ﻿@page "/register"
 @using CyberQuiz.UI.Services
+@using Microsoft.AspNetCore.Components.Authorization
 @inject AuthApiClient AuthApi
-@inject AuthStateService AuthState
+@inject AuthenticationStateProvider AuthProvider
 @inject NavigationManager Nav
+@rendermode InteractiveServer
 
-<div class="auth-wrapper">
-    <div class="auth-panel">
-        <h2 class="auth-title">Skapa konto</h2>
-        <p class="auth-subtitle">Börja din resa här</p>
-
-        @if (!string.IsNullOrEmpty(ErrorMessage))
-        {
-            <div class="auth-error">@((MarkupString)ErrorMessage)</div>
-        }
-
-        <div class="auth-field">
-            <label>Email</label>
-            <input @bind="Email" type="email" />
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-5">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h3 class="mb-4 text-center">Skapa konto</h3>
+                    @if (!string.IsNullOrEmpty(ErrorMessage))
+                    {
+                        <div class="alert alert-danger" role="alert">@((MarkupString)ErrorMessage)</div>
+                    }
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input @bind="Email" type="email" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Användarnamn</label>
+                        <input @bind="UserName" type="text" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Lösenord</label>
+                        <input @bind="Password" type="password" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Bekräfta lösenord</label>
+                        <input @bind="ConfirmPassword" type="password" class="form-control" />
+                    </div>
+                    <button class="btn btn-success w-100" @onclick="HandleRegister">Registrera</button>
+                    <p class="mt-3 mb-0 text-center">
+                        Har du redan ett konto?
+                        <a href="/" class="ms-1">Logga in</a>
+                    </p>
+                </div>
+            </div>
         </div>
-
-        <div class="auth-field">
-            <label>Användarnamn</label>
-            <input @bind="UserName" type="text" />
-        </div>
-
-        <div class="auth-field">
-            <label>Lösenord</label>
-            <input @bind="Password" type="password" />
-        </div>
-
-        <div class="auth-field">
-            <label>Bekräfta lösenord</label>
-            <input @bind="ConfirmPassword" type="password" />
-        </div>
-
-        <button class="auth-button success" @onclick="HandleRegister">Registrera</button>
-
-        <p class="auth-switch">
-            Har du redan ett konto?
-            <a href="/">Logga in</a>
-        </p>
     </div>
 </div>
 
@@ -79,7 +79,8 @@
         }
 
         // Spara användaren i AuthStateService
-        AuthState.SetUser(response.Result!.Token, response.Result.Email, response.Result.UserName);
+        var customProvider = (CustomAuthStateProvider)AuthProvider;
+        await customProvider.MarkUserAsAuthenticated(response.Result!.Token);
 
         // Navigera vidare
         Nav.NavigateTo("/", true);

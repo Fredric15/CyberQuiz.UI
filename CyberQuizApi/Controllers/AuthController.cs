@@ -61,17 +61,7 @@ namespace CyberQuizApi.Controllers
             });
         }
 
-       
-        /// Returns a success response for client-side logout flows in JWT-based authentication.
-        [Authorize]
-        [HttpPost("logout")]
-        public IActionResult Logout()
-        {
-            return Ok(new { message = "Logged out successfully." });
-        }
-
-        
-        /// Returns the authenticated user's profile by reading the user id from JWT claims.
+       /// Returns the authenticated user's profile by reading the user id from JWT claims.
         [Authorize]
         [HttpGet("profile")]
         public async Task<ActionResult<ProfileResponse>> GetProfile()
