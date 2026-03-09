@@ -1,10 +1,11 @@
 ﻿@page "/profile"
+@using Microsoft.AspNetCore.Authorization
 @rendermode InteractiveServer
-@inject AuthApiClient AuthApiClient
-@inject AuthStateService AuthStateService
+@inject UserApiClient UserApiClient
 @inject CategoryApiClient CategoryApiClient
 @inject ProgressApiClient ProgressApiClient
 @inject NavigationManager NavigationManager
+
 
 <PageTitle>Profile</PageTitle>
 
@@ -137,12 +138,6 @@ else if (_profile is not null)
 
     protected override async Task OnInitializedAsync()
     {
-        if (!AuthStateService.IsAuthenticated)
-        {
-            NavigationManager.NavigateTo("/login");
-            return;
-        }
-
         await LoadProfileAsync();
     }
 
@@ -153,10 +148,10 @@ else if (_profile is not null)
 
         try
         {
-            var (success, profile, errors) = await AuthApiClient.GetProfileAsync();
+            var (success, profile, errors) = await UserApiClient.GetProfileAsync();
             if (!success || profile is null)
             {
-                _errorMessage = errors.FirstOrDefault() ?? "Failed to load profile.";
+                _errorMessage = errors;
                 return;
             }
 
@@ -193,15 +188,13 @@ else if (_profile is not null)
 
         try
         {
-            var (success, profile, errors) = await AuthApiClient.UpdateEmailAsync(_emailModel.Email);
-            if (!success || profile is null)
+            var result = await UserApiClient.UpdateEmailAsync(_emailModel.Email);
+            if (!result.Success)
             {
-                _emailErrors = errors.ToList();
+                _emailErrors.Add(result.Error ?? "An unknown error occurred.");
                 return;
             }
 
-            _profile = profile;
-            AuthStateService.UpdateProfile(profile.Email, profile.UserName);
             _emailSuccessMessage = "Email updated successfully.";
         }
         finally
@@ -218,10 +211,10 @@ else if (_profile is not null)
 
         try
         {
-            var (success, errors) = await AuthApiClient.ChangePasswordAsync(_passwordModel.CurrentPassword, _passwordModel.NewPassword);
+            var (success, errors) = await UserApiClient.ChangePasswordAsync(_passwordModel.CurrentPassword, _passwordModel.NewPassword);
             if (!success)
             {
-                _passwordErrors = errors.ToList();
+                _passwordErrors.Add(errors ?? "Could not change password.");
                 return;
             }
 

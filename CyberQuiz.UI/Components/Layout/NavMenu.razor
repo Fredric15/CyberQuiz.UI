@@ -1,4 +1,4 @@
-﻿@namespace CyberQuiz.UI.Components.Layout
+﻿@* @namespace CyberQuiz.UI.Components.Layout
 @using CyberQuiz.UI.Services
 @inject AuthStateService AuthState
 
@@ -24,4 +24,44 @@
         }
 
     </div>
+</nav> *@
+
+@namespace CyberQuiz.UI.Components.Layout
+@using CyberQuiz.UI.Services
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthApiClient AuthApi
+@inject NavigationManager Nav
+
+<nav class="nav-container">
+    <div class="nav-left">
+        <span class="nav-logo">CyberQuiz</span>
+    </div>
+
+    <div class="nav-right">
+        <AuthorizeView>
+            <Authorized>
+                <NavLink href="/categories">Kategorier</NavLink>
+                <NavLink href="/details">Mitt konto</NavLink>
+                <button class="btn btn-link nav-logout" style="color: #d7d7d7; text-decoration: none;" @onclick="HandleLogout">Logga ut</button>
+                // Länkar som bara visas för inloggade användare
+            </Authorized>
+            
+            <NotAuthorized>
+                <NavLink href="/">Logga in</NavLink>
+                <NavLink href="/register">Registrera</NavLink>
+                // Länkar som bara visas för icke-inloggade användare
+            </NotAuthorized>
+        </AuthorizeView>
+    </div>
 </nav>
+
+@code {
+    private async Task HandleLogout()
+    {
+        // 1. Anropa den rena metoden vi skapade i AuthApiClient
+        await AuthApi.LogOutAsync();
+        
+        // 2. Skicka tillbaka användaren till startsidan/inloggningen
+        Nav.NavigateTo("/");
+    }
+}
