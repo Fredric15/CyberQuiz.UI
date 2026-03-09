@@ -26,7 +26,7 @@ namespace CyberQuizApi.Controllers
         }
 
       
-        /// Authenticates a user and returns a signed JWT token when credentials are valid.
+        // Authenticates a user and returns a signed JWT token when credentials are valid.
        [HttpPost("login")]
         public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginRequest request)
         {
@@ -44,7 +44,7 @@ namespace CyberQuizApi.Controllers
         }
 
        
-        /// Registers a new user account and returns a signed JWT token for immediate authenticated use.
+        // Registers a new user account and returns a signed JWT token for immediate authenticated use.
         [HttpPost("register")]
         public async Task<ActionResult<LoginResponse>> Register([FromBody] RegisterRequest request)
         {
@@ -61,7 +61,17 @@ namespace CyberQuizApi.Controllers
             });
         }
 
-       /// Returns the authenticated user's profile by reading the user id from JWT claims.
+       
+        //Returns a success response for client-side logout flows in JWT-based authentication.
+        [Authorize]
+        [HttpPost("logout")]
+        public IActionResult Logout()
+        {
+            return Ok(new { message = "Logged out successfully." });
+        }
+
+        
+        // Returns the authenticated user's profile by reading the user id from JWT claims.
         [Authorize]
         [HttpGet("profile")]
         public async Task<ActionResult<ProfileResponse>> GetProfile()
@@ -127,9 +137,9 @@ namespace CyberQuizApi.Controllers
             return Ok(new { message = "Password updated successfully." });
         }
 
-        /// <summary>
-        /// Builds and signs a JWT token that stores the user's id and identity claims.
-        /// </summary>
+        
+        // Builds and signs a JWT token that stores the user's id and identity claims.
+      
         private string GenerateJwtToken(ApplicationUser user)
         {
             var jwtSettings = _configuration.GetSection("JwtSettings");

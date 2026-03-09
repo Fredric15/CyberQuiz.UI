@@ -45,7 +45,7 @@ namespace CyberQuiz.BLL.Services
         }
 
         
-        /// Updates the email address for an existing user.
+        // Updates the email address for an existing user.
         public async Task<IEnumerable<string>> UpdateEmailAsync(ApplicationUser user, string newEmail)
         {
             user.Email = newEmail;

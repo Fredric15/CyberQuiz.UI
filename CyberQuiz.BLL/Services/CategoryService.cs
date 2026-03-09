@@ -13,11 +13,15 @@ namespace CyberQuiz.BLL.Services
     {
         private readonly IQuizRepository _quizRepository;
 
+     
+        // Initializes the service used to fetch category and subcategory data.      
         public CategoryService(IQuizRepository quizRepository)
         {
             _quizRepository = quizRepository;
         }
 
+        
+        // Returns all quiz categories mapped to lightweight category DTOs.      
         public async Task<IEnumerable<CategoryDTOModel>> GetCategories()
         {
             var categories = await _quizRepository.GetAllCategoriesWithSubCAsync();
@@ -32,6 +36,8 @@ namespace CyberQuiz.BLL.Services
             }).ToList();
         }
 
+        
+        // Returns subcategories for one category id mapped to subcategory DTOs.       
         public async Task<IEnumerable<SubCategoryDTOModel>> GetSubCategoriesByCategoryId(int categoryId)
         {
             var categories = await _quizRepository.GetAllCategoriesWithSubCAsync();
@@ -50,6 +56,8 @@ namespace CyberQuiz.BLL.Services
             }).ToList();
         }
 
+       
+        // Returns categories together with their nested subcategory DTOs.       
         public async Task<IEnumerable<CategoryWithSubCategoriesDTOModel>> GetCategoriesWithSubCategories()
         {
             var subCategories = await _quizRepository.GetAllCategoriesWithSubCAsync();

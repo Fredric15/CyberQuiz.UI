@@ -13,11 +13,15 @@ namespace CyberQuiz.BLL.Services
     {
         private readonly IQuizRepository _quizRepository;
 
+       
+        // Initializes the service used to read quiz and question data.        
         public QuestionService(IQuizRepository quizRepository)
         {
             _quizRepository = quizRepository;
         }
 
+      
+        // Gets all questions for a subcategory and maps them to question DTOs.        
         public async Task<IEnumerable<QuestionDTOModel>> GetQuestionsBySubCategoryId(int subCategoryId)
         {
             var subCategory = await _quizRepository.GetCompleteQuizByIdAsync(subCategoryId);

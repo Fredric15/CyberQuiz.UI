@@ -9,7 +9,7 @@
 
 <PageTitle>Profile</PageTitle>
 
-<h1>Profile</h1>
+<h1>Profil</h1>
 
 @if (_loading)
 {
@@ -23,10 +23,10 @@ else if (_profile is not null)
 {
     <div class="card mb-4">
         <div class="card-body">
-            <h5 class="card-title mb-3">Account</h5>
-            <p class="mb-1"><strong>Username:</strong> @_profile.UserName</p>
-            <p class="mb-2"><strong>Email:</strong> @_profile.Email</p>
-            <p class="mb-1"><strong>General progress:</strong> @_generalProgressPercentage%</p>
+            <h5 class="card-title mb-3">Konto</h5>
+            <p class="mb-1"><strong>Användarnamn:</strong> @_profile.UserName</p>
+            <p class="mb-2"><strong>Epost:</strong> @_profile.Email</p>
+            <p class="mb-1"><strong>Framsteg:</strong> @_generalProgressPercentage%</p>
             <div class="progress" role="progressbar" aria-label="General quiz progression" aria-valuenow="@_generalProgressPercentage" aria-valuemin="0" aria-valuemax="100">
                 <div class="progress-bar" style="width: @_generalProgressPercentage%;">@_generalProgressPercentage%</div>
             </div>
@@ -37,13 +37,13 @@ else if (_profile is not null)
         <div class="col-md-6">
             <div class="card h-100">
                 <div class="card-body">
-                    <h5 class="card-title mb-3">Change email</h5>
+                    <h5 class="card-title mb-3">Ändra Epost</h5>
 
                     <EditForm Model="_emailModel" OnValidSubmit="HandleEmailUpdateAsync" FormName="profile-email">
                         <DataAnnotationsValidator />
 
                         <div class="mb-3">
-                            <label for="profile-email" class="form-label">New email</label>
+                            <label for="profile-email" class="form-label">Ny Epost</label>
                             <InputText id="profile-email" class="form-control" @bind-Value="_emailModel.Email" autocomplete="email" />
                             <ValidationMessage For="() => _emailModel.Email" class="text-danger" />
                         </div>
@@ -65,7 +65,7 @@ else if (_profile is not null)
                             <div class="alert alert-success">@_emailSuccessMessage</div>
                         }
 
-                        <button type="submit" class="btn btn-primary" disabled="@_isUpdatingEmail">Update email</button>
+                        <button type="submit" class="btn btn-primary" disabled="@_isUpdatingEmail">Updatera Epost</button>
                     </EditForm>
                 </div>
             </div>
@@ -74,25 +74,25 @@ else if (_profile is not null)
         <div class="col-md-6">
             <div class="card h-100">
                 <div class="card-body">
-                    <h5 class="card-title mb-3">Change password</h5>
+                    <h5 class="card-title mb-3">Ändra Lösenord</h5>
 
                     <EditForm Model="_passwordModel" OnValidSubmit="HandlePasswordChangeAsync" FormName="profile-password">
                         <DataAnnotationsValidator />
 
                         <div class="mb-3">
-                            <label for="current-password" class="form-label">Current password</label>
+                            <label for="current-password" class="form-label">Nuvarande lösenord</label>
                             <InputText id="current-password" class="form-control" type="password" @bind-Value="_passwordModel.CurrentPassword" autocomplete="current-password" />
                             <ValidationMessage For="() => _passwordModel.CurrentPassword" class="text-danger" />
                         </div>
 
                         <div class="mb-3">
-                            <label for="new-password" class="form-label">New password</label>
+                            <label for="new-password" class="form-label">Nytt lösenord</label>
                             <InputText id="new-password" class="form-control" type="password" @bind-Value="_passwordModel.NewPassword" autocomplete="new-password" />
                             <ValidationMessage For="() => _passwordModel.NewPassword" class="text-danger" />
                         </div>
 
                         <div class="mb-3">
-                            <label for="confirm-password" class="form-label">Confirm new password</label>
+                            <label for="confirm-password" class="form-label">Bekräfta nytt lösenord</label>
                             <InputText id="confirm-password" class="form-control" type="password" @bind-Value="_passwordModel.ConfirmNewPassword" autocomplete="new-password" />
                             <ValidationMessage For="() => _passwordModel.ConfirmNewPassword" class="text-danger" />
                         </div>
@@ -114,7 +114,7 @@ else if (_profile is not null)
                             <div class="alert alert-success">@_passwordSuccessMessage</div>
                         }
 
-                        <button type="submit" class="btn btn-primary" disabled="@_isChangingPassword">Update password</button>
+                        <button type="submit" class="btn btn-primary" disabled="@_isChangingPassword">Updatera lösenord</button>
                     </EditForm>
                 </div>
             </div>

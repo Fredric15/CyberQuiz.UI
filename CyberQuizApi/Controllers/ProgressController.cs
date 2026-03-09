@@ -17,12 +17,16 @@ namespace CyberQuizApi.Controllers
         private readonly IProgressService _progressService;
         private readonly IQuestionService _questionService;
 
+        
+        // Initializes the controller used to read and submit quiz progress.    
         public ProgressController(IProgressService progressService, IQuestionService questionService)
         {
             _progressService = progressService;
             _questionService = questionService;
         }
 
+
+        // Returns the authenticated user's progress for all subcategories.        
         [HttpGet("subcategories")]
         public async Task<ActionResult<IEnumerable<SubCategoryProgressDto>>> GetSubCategoryProgress()
         {
@@ -37,6 +41,8 @@ namespace CyberQuizApi.Controllers
             return Ok(response);
         }
 
+      
+        // Scores a submitted subcategory quiz and stores the user's pass/fail progress.       
         [HttpPost("subcategories/submit")]
         public async Task<ActionResult<QuizSubmissionResponse>> SubmitSubCategory([FromBody] QuizSubmissionRequest request)
         {
@@ -69,6 +75,8 @@ namespace CyberQuizApi.Controllers
             return Ok(new QuizSubmissionResponse(score, passed));
         }
 
+        
+        // Reads the authenticated user id from common JWT claim names.       
         private string? GetUserId()
         {
             return User.FindFirstValue(JwtRegisteredClaimNames.Sub)
