@@ -86,11 +86,19 @@ public class UserApiClient
     //Hjälpmetod för att sätta token i headern innan varje anrop som kräver autentisering
     private async Task SetAuthHeaderAsync()
     {
-        var result = await _sessionStorage.GetAsync<string>("authToken");
-        if (result.Success && !string.IsNullOrEmpty(result.Value))
+        try
         {
-            _httpClient.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", result.Value);
+            var result = await _sessionStorage.GetAsync<string>("authToken");
+            if (result.Success && !string.IsNullOrEmpty(result.Value))
+            {
+                _httpClient.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", result.Value);
+            }
+        }
+        catch (InvalidOperationException)
+        {
+            //Fångar kraschen när Blazor försöker läsa från sessionStorage under server-side rendering,
+            //När JavaScript inte har hunnit starta än.
         }
     }
 }

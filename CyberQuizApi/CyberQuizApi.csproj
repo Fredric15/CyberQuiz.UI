@@ -20,8 +20,4 @@
     <ProjectReference Include="..\CyberQuiz.Shared\CyberQuiz.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
-
 </Project>

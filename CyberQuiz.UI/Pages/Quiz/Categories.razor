@@ -1,33 +1,44 @@
 ﻿@page "/categories"
 @using CyberQuiz.UI.Components.Shared
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
 @inject CategoryApiClient CategoryApi
 @inject ProgressApiClient ProgressApi
-@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@rendermode InteractiveServer
 
-<h1 class="mb-4">Välj kategori</h1>
+<AuthorizeView>
+    <Authorizing>
+        <p>Loading...</p>
+    </Authorizing>
+    <Authorized>
+        <h1 class="mb-4">Välj kategori</h1>
 
-<div class="row g-4">
-    @foreach (var c in _categories)
-    {
-        var isUnlocked = IsCategoryUnlocked(c);
-        var isCompleted = IsCategoryCompleted(c);
+        <div class="row g-4">
+            @foreach (var c in _categories)
+            {
+                var isUnlocked = IsCategoryUnlocked(c);
+                var isCompleted = IsCategoryCompleted(c);
 
-        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-            <QuizCard 
-                Title="@c.Title"
-                Description="@c.Description"             
-                OnClick="() => NavigateTo(c.Id)" 
-                Unlocked="isUnlocked"
-                Completed="isCompleted"/>
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                    <QuizCard Title="@c.Title"
+                              Description="@c.Description"
+                              OnClick="() => NavigateTo(c.Id)"
+                              Unlocked="isUnlocked"
+                              Completed="isCompleted" />
+                </div>
+            }
         </div>
-    }
-</div>
-
+    </Authorized>
+    <NotAuthorized>
+        <h1 class="mb-4">Du måste vara inloggad för att se kategorier</h1>
+        <button class="btn btn-primary" @onclick='() => Navigation.NavigateTo("/")'>Logga in</button>
+    </NotAuthorized>
+</AuthorizeView>
 @code {
     private List<CategoryDetailModel> _categories = [];
     private Dictionary<int, SubCategoryProgressModel> _progressBySubCategoryId = [];
 
-// public class CategoryDummy
+    // public class CategoryDummy
     // {
     //     public int Id { get; set; }
     //     public string Title { get; set; } = "";
@@ -42,9 +53,9 @@
                 .OrderBy(c => c.Id)
                 .ToList();
         var progress = await ProgressApi.GetSubCategoryProgressAsync();
-            _progressBySubCategoryId = progress.ToDictionary(p => p.SubCategoryId, p => p);
+        _progressBySubCategoryId = progress.ToDictionary(p => p.SubCategoryId, p => p);
 
-       
+
     }
 
     // private List<CategoryDummy> CategoryList= new()

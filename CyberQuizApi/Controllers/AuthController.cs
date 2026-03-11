@@ -1,6 +1,7 @@
 ﻿using CyberQuiz.BLL.Models;
 using CyberQuiz.BLL.Services.Interfaces;
 using CyberQuiz.DAL.Models;
+using CyberQuizApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -17,12 +18,12 @@ namespace CyberQuizApi.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
-        private readonly IConfiguration _configuration;
+        private readonly ITokenService _tokenService;
 
-        public AuthController(IAuthService authService, IConfiguration configuration)
+        public AuthController(IAuthService authService, ITokenService tokenService)
         {
             _authService = authService;
-            _configuration = configuration;
+            _tokenService = tokenService;
         }
 
       
@@ -34,7 +35,7 @@ namespace CyberQuizApi.Controllers
             if (user == null)
                 return Unauthorized(new { message = "Invalid email or password." });
 
-            var token = GenerateJwtToken(user);
+            var token = _tokenService.GenerateJwtToken(user);
             return Ok(new LoginResponse
             {
                 Token = token,
@@ -52,7 +53,7 @@ namespace CyberQuizApi.Controllers
             if (user == null)
                 return BadRequest(new { errors });
 
-            var token = GenerateJwtToken(user);
+            var token = _tokenService.GenerateJwtToken(user);
             return Ok(new LoginResponse
             {
                 Token = token,
@@ -61,16 +62,6 @@ namespace CyberQuizApi.Controllers
             });
         }
 
-       
-        //Returns a success response for client-side logout flows in JWT-based authentication.
-        [Authorize]
-        [HttpPost("logout")]
-        public IActionResult Logout()
-        {
-            return Ok(new { message = "Logged out successfully." });
-        }
-
-        
         // Returns the authenticated user's profile by reading the user id from JWT claims.
         [Authorize]
         [HttpGet("profile")]
@@ -137,45 +128,12 @@ namespace CyberQuizApi.Controllers
             return Ok(new { message = "Password updated successfully." });
         }
 
-        
-        // Builds and signs a JWT token that stores the user's id and identity claims.
-      
-        private string GenerateJwtToken(ApplicationUser user)
-        {
-            var jwtSettings = _configuration.GetSection("JwtSettings");
-            // Uses the configured secret key to sign the JWT so the API can verify token integrity.
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]!));
-            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            // Stores user identity data inside JWT claims for later authorization and user lookup.
-            var claims = new[]
-            {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id),
-            new Claim(JwtRegisteredClaimNames.Email, user.Email!),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(ClaimTypes.Name, user.UserName!)
-        };
-
-            // Creates the JWT with issuer, audience and expiration from configuration.
-            var token = new JwtSecurityToken(
-                issuer: jwtSettings["Issuer"],
-                audience: jwtSettings["Audience"],
-                claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(double.Parse(jwtSettings["ExpirationMinutes"]!)),
-                signingCredentials: credentials);
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
-
-       
         // Reads the current user id from common JWT claim names.
         private string? GetUserId()
         {
-            return User.FindFirstValue(JwtRegisteredClaimNames.Sub)
-                ?? User.FindFirstValue("sub")
-                ?? User.FindFirstValue(ClaimTypes.NameIdentifier)
-                ?? User.FindFirstValue("nameid")
-                ?? User.FindFirstValue("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
+            return User.FindFirstValue(ClaimTypes.NameIdentifier)
+                ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub);
         }
     }
 }

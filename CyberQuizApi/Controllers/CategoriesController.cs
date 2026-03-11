@@ -1,12 +1,14 @@
 ﻿using CyberQuiz.BLL.Models.DTO;
 using CyberQuiz.BLL.Services.Interfaces;
 using CyberQuiz.DAL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CyberQuizApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class CategoriesController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
