@@ -10,7 +10,7 @@ using System.Security.Claims;
 namespace CyberQuizApi.Controllers
 {
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize]
     [Route("api/[controller]")]
     public class ProgressController : ControllerBase
     {

@@ -1,16 +1,17 @@
-using CyberQuiz.DAL.Data;
-using CyberQuiz.DAL.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using CyberQuiz.BLL.Services;
 using CyberQuiz.BLL.Services.Interfaces;
-using System.Text;
-using CyberQuiz.DAL.Repositories.Interfaces;
-using CyberQuiz.DAL.Repositories;
+using CyberQuiz.DAL.Data;
 using CyberQuiz.DAL.Data.SeedData;
+using CyberQuiz.DAL.Models;
+using CyberQuiz.DAL.Repositories;
+using CyberQuiz.DAL.Repositories.Interfaces;
+using CyberQuizApi.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +31,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IQuestionService, QuestionService>();
 builder.Services.AddScoped<IProgressService, ProgressService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 // Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
@@ -44,6 +46,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     .AddDefaultTokenProviders();
 
 // Reads JWT settings used to issue and validate tokens.
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 builder.Services.AddAuthentication(options =>
 {
@@ -55,8 +58,8 @@ builder.Services.AddAuthentication(options =>
     // Validates incoming JWT access tokens for protected API endpoints.
     options.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateIssuer = false,
-        ValidateAudience = false,
+        ValidateIssuer = true,
+        ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
         ValidIssuer = jwtSettings["Issuer"],

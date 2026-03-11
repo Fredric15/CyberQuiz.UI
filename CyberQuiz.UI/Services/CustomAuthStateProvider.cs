@@ -4,7 +4,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace CyberQuiz.UI.Services;
-
 public class CustomAuthStateProvider : AuthenticationStateProvider
 {
     //Alternativ 1:

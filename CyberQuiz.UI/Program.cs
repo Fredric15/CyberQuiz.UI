@@ -59,7 +59,11 @@ builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddAuthentication("Cookies").AddCookie();
+builder.Services.AddAuthentication("Cookies").AddCookie(options =>
+{
+    // Vi skriver över Microsofts standard-URL med vår egen
+    options.LoginPath = "/";
+});
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
