@@ -50,6 +50,7 @@ builder.Services.AddHttpClient<AiTutorApiClient>(client =>
 // Registrera AuthStateService (global auth‑state)
 
 builder.Services.AddCascadingAuthenticationState();
+// Berätta för Blazor att använda vår CustomAuthStateProvider när den behöver veta vem som är inloggad
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 
 

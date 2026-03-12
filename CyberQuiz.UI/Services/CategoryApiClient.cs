@@ -16,12 +16,6 @@ public class CategoryApiClient
         _sessionStorage = sessionStorage;
     }
 
-    public async Task<IEnumerable<CategoryModel>> GetCategories()
-    {
-        return await _httpClient.GetFromJsonAsync<IEnumerable<CategoryModel>>("api/categories")
-            ?? Enumerable.Empty<CategoryModel>();
-    }
-
     public async Task<IEnumerable<CategoryDetailModel>> GetCategoriesWithSubCategories()
     {
         try
@@ -36,14 +30,6 @@ public class CategoryApiClient
             Console.Error.WriteLine($"Error fetching categories with subcategories: {ex.Message}");
             return Enumerable.Empty<CategoryDetailModel>();
         }
-    }
-
-    // 🔥 Den metod som SubCategories.razor anropar
-    public async Task<IEnumerable<SubCategoryModel>> GetSubCategoriesAsync(int categoryId)
-    {
-        return await _httpClient.GetFromJsonAsync<IEnumerable<SubCategoryModel>>(
-            $"api/categories/{categoryId}/subcategories")
-            ?? Enumerable.Empty<SubCategoryModel>();
     }
 
     private async Task SetAuthHeaderAsync()

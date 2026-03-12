@@ -1,32 +1,4 @@
-﻿@* @namespace CyberQuiz.UI.Components.Layout
-@using CyberQuiz.UI.Services
-@inject AuthStateService AuthState
-
-<nav class="nav-container">
-    <div class="nav-left">
-        <span class="nav-logo">CyberQuiz</span>
-    </div>
-
-    <div class="nav-right">
-
-        @if (AuthState.IsAuthenticated)
-        {
-            <NavLink href="/categories">Kategorier</NavLink>
-            <NavLink href="/details">Mitt konto</NavLink>
-            <NavLink href="/logout">Logga ut</NavLink>
-			//Länkar som bara visas för inloggade användare
-        }
-        else
-        {
-            <NavLink href="/">Logga in</NavLink>
-            <NavLink href="/register">Registrera</NavLink>
-			//Länkar som bara visas för icke-inloggade användare
-        }
-
-    </div>
-</nav> *@
-
-@namespace CyberQuiz.UI.Components.Layout
+﻿@namespace CyberQuiz.UI.Components.Layout
 @using CyberQuiz.UI.Services
 @using Microsoft.AspNetCore.Components.Authorization
 @inject AuthApiClient AuthApi

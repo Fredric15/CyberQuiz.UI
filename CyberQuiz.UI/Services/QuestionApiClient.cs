@@ -32,11 +32,6 @@ public class QuestionApiClient
 
     }
 
-    //public async Task<QuizDetailsDto?> GetQuizDetailsAsync(int subCategoryId)
-    //{
-    //    // Endpoint expected to return a quiz DTO with questions and options
-    //    return await _httpClient.GetFromJsonAsync<QuizDetailsDto>($"api/subcategories/{subCategoryId}/quiz");
-    //}
     private async Task SetAuthHeaderAsync()
     {
         try

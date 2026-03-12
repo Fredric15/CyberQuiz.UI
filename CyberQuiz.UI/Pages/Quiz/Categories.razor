@@ -38,14 +38,6 @@
     private List<CategoryDetailModel> _categories = [];
     private Dictionary<int, SubCategoryProgressModel> _progressBySubCategoryId = [];
 
-    // public class CategoryDummy
-    // {
-    //     public int Id { get; set; }
-    //     public string Title { get; set; } = "";
-    //     public string Description { get; set; } = "";
-    //     public string Tag { get; set; } = "";
-    // }
-
     protected override async Task OnInitializedAsync()
     {
         //hämta kategorier från API
@@ -57,14 +49,6 @@
 
 
     }
-
-    // private List<CategoryDummy> CategoryList= new()
-    // {
-    //     new CategoryDummy { Id = 1, Title = "Matematik", Description = "Grundläggande matteövningar.", Tag = "Unlocked" },
-    //     new CategoryDummy { Id = 2, Title = "Historia", Description = "Utforska viktiga händelser.", Tag = "Locked" },
-    //     new CategoryDummy { Id = 3, Title = "Geografi", Description = "Lär dig om världen.", Tag = "Completed" },
-    //     new CategoryDummy { Id = 4, Title = "Programmering", Description = "Grunder i C#, variabler, loopar.", Tag = "Unlocked" }
-    // };
 
     private void NavigateTo(int id)
     {

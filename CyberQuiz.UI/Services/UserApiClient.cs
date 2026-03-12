@@ -51,38 +51,6 @@ public class UserApiClient
         return response.IsSuccessStatusCode ? (true, null) : (false, "Lösenordsbyte misslyckades.");
     }
 
-    //public async Task<bool> ChangeUserNameAsync(string newUserName)
-    //{
-    //    if (!_auth.IsAuthenticated)
-    //        return false;
-
-    //    var response = await _http.PutAsJsonAsync("api/user/change-username", new { NewUserName = newUserName });
-
-    //    return response.IsSuccessStatusCode;
-    //}
-
-    //public async Task<bool> ChangePasswordAsync(string currentPassword, string newPassword)
-    //{
-    //    if (!_auth.IsAuthenticated)
-    //        return false;
-
-    //    var response = await _http.PutAsJsonAsync("api/user/change-password", new
-    //    {
-    //        CurrentPassword = currentPassword,
-    //        NewPassword = newPassword
-    //    });
-
-    //    return response.IsSuccessStatusCode;
-    //}
-
-    //public async Task<UserStatsModel?> GetUserStatsAsync()
-    //{
-    //    if (!_auth.IsAuthenticated)
-    //        return null;
-
-    //    return await _http.GetFromJsonAsync<UserStatsModel>("api/user/stats");
-    //}
-
     //Hjälpmetod för att sätta token i headern innan varje anrop som kräver autentisering
     private async Task SetAuthHeaderAsync()
     {

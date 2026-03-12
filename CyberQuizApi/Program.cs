@@ -45,8 +45,12 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
-// Reads JWT settings used to issue and validate tokens.
+
+//Berättar för .NET att fylla JwtSettings-klassen med datan från "Jwt"-blocket i appsettings.json
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
+
+//Viktigt att detta kommer EFTER AddIdentity,
+//Annars kommer programmet att försöka använda cookies som standard och då kommer JWT-autentiseringen inte att fungera
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 builder.Services.AddAuthentication(options =>
 {
@@ -94,11 +98,12 @@ using (var scope = app.Services.CreateScope())
     {
         var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 
-        // Kör seedningen
+        // Kör seedningen av default user
         await SeedUser.SeedDefaultUserAsync(userManager);
     }
     catch (Exception ex)
     {
+        
         var logger = services.GetRequiredService<ILogger<Program>>();
         logger.LogError(ex, "Ett fel uppstod när seed-datan skulle läggas in.");
     }
