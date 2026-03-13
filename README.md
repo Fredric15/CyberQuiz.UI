@@ -2,6 +2,11 @@
 
 Skolprojekt i grupp
 
+UI => Jonathan,
+API,BLL => Viggo,
+DAL => Fredric
+
+
 Seedad användare
 email: user@example.com
 password: Password1234!
